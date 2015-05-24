@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shops>
+	<shop>
+		<name>Магазин Галс</name>
+		<latitude>61.773247</latitude>
+		<longitude>34.393377</longitude>
+		<address>185005, Петрозаводск, ул. Правды, 29</address>
+		<phone>+7 (8142) 56-19-82</phone>
+	</shop>
+			<shop>
+		<name>Магазин Егерь</name>
+		<latitude>61.765329</latitude>
+		<longitude>34.374797</longitude>
+		<address>185026, Петрозаводск, ул. Ровио, 12а</address>
+		<phone>+7 (8142) 53-10-01</phone>
+		<site>http://egerkarel.ru</site>
+	</shop>
+	<shop>
+		<name>Магазин Клево</name>
+		<latitude>61.77623</latitude>
+		<longitude>34.357282</longitude>
+		<address>185001, Петрозаводск, наб. Ла-Рошель, 17</address>
+		<phone>+7 (8142) 76-39-91</phone>
+	</shop>
+	<shop>
+		<name>Магазин Ярви</name>
+		<latitude>61.788667</latitude>
+		<longitude>34.370278</longitude>
+		<address>1185035, Петрозаводск, ул. Дзержинского, 6</address>
+		<phone>+7 (8142) 59-35-39</phone>
+		<site>http://jarvi-centr.ru</site>
+	</shop>
+	<shop>
+		<name>Магазин Рыбокоп</name>
+		<latitude>61.790338</latitude>
+		<longitude>34.365611</longitude>
+		<address>185000, Петрозаводск, просп. Ленина, 15</address>
+		<phone>+7 (8142) 63-27-65</phone>
+		<site>http://rybocop.ru</site>
+	</shop>
+	<shop>
+		<name>Магазин Рыболов-Турист</name>
+		<latitude>61.790328</latitude>
+		<longitude>34.365632</longitude>
+		<address>185035, Петрозаводск, просп. Ленина, 13</address>
+		<phone>+7 (8142) 76-48-32</phone>
+	</shop>
+	<shop>
+		<name>Магазин Ермак</name>
+		<latitude>61.781568</latitude>
+		<longitude>34.348228</longitude>
+		<address>185035, Петрозаводск, ул. Горького М., 25</address>
+		<phone>+7 (8142) 79-28-00</phone>
+	</shop>
+	<shop>
+		<name>Поплавок</name>
+		<latitude>61.781145</latitude>
+		<longitude>34.352065</longitude>
+		<address>185035, Петрозаводск, ул. Красноармейская, 18</address>
+		<phone>+7 (8142) 78-54-19</phone>
+	</shop>
+	<shop>
+		<name>Магазин Военохота</name>
+		<latitude>61.776091</latitude>
+		<longitude>34.35686</longitude>
+		<address>185030, Петрозаводск, ул. Лесная, 3</address>
+		<phone>+7 (8142) 77-35-18</phone>
+	</shop>
+	<shop>
+		<name>Магазин Охотник и Рыболов</name>
+		<latitude>61.787433</latitude>
+		<longitude>34.34832</longitude>
+		<address>185035, Петрозаводск, ул. Анохина, 45</address>
+		<phone>+7 (8142) 78-17-80</phone>
+	</shop>
+	<shop>
+		<name>Магазин Охотник и Рыболов</name>
+		<latitude>61.787433</latitude>
+		<longitude>34.34832</longitude>
+		<address>185035, Петрозаводск, ул. Анохина, 45</address>
+		<phone>+7 (8142) 78-17-80</phone>
+	</shop>
+	<shop>
+		<name>Рыболов</name>
+		<latitude>61.766073</latitude>
+		<longitude>34.363497</longitude>
+		<address>185026, Петрозаводск, ул. Балтийская, 63</address>
+		<phone>+7 (8142) 53-00-92</phone>
+	</shop>
+	<shop>
+		<name>Магазин Природа</name>
+		<latitude>61.800729</latitude>
+		<longitude>34.34678</longitude>
+		<address>Петрозаводск, ул. Московская, 7</address>
+		<phone>+7 (814) 277-43-69</phone>
+	</shop>
+	<shop>
+		<name>Магазин Природа</name>
+		<latitude>61.800729</latitude>
+		<longitude>34.34678</longitude>
+		<address>Петрозаводск, ул. Московская, 7</address>
+		<phone>+7 (814) 277-43-69</phone>
+	</shop>
+	<shop>
+		<name>Лев Пласт</name>
+		<latitude>61.814502</latitude>
+		<longitude>34.306655</longitude>
+		<address>185031, Петрозаводск, ул. Заводская, 4</address>
+		<phone>+7 (8142) 70-19-95</phone>
+	</shop>
+	<shop>
+		<name>РыбачОК!</name>
+		<latitude>62.204481</latitude>
+		<longitude>34.261123</longitude>
+		<address>Кондопога, ул. Заводская, 37 корп. 1</address>
+		<phone>+7 921 452-82-32</phone>
+	</shop>
+	<shop>
+		<name>Магазин Ярви, Техцентр</name>
+		<latitude>64.587761</latitude>
+		<longitude>30.609866</longitude>
+		<address>186930, Костомукша г., ул. Антикайнена, 5а</address>
+		<phone>+7 (81459) 5-14-00</phone>
+		<site>http://jarvi-centr.ru</site>
+	</shop>
+	<shop>
+		<name>Магазин Клевое Место</name>
+		<latitude>64.589186</latitude>
+		<longitude>30.600064</longitude>
+		<address>186930, Костомукша г., просп. Горняков, 2а</address>
+		<phone>+7 (81459) 7-23-70</phone>
+	</shop>
+	<shop>
+		<name>Охотник</name>
+		<latitude>64.589589</latitude>
+		<longitude>30.606279</longitude>
+		<address>186930, Костомукша г., ул. Костомукша, Антикайнена, 15</address>
+		<phone>+7 (81459) 5-22-65</phone>
+	</shop>
+	<shop>
+		<name>Магазин Турист</name>
+		<latitude>63.747364</latitude>
+		<longitude>34.297334</longitude>
+		<address>186420, Сегежский р-н, Сегежа г., ул. Спиридонова, 36</address>
+		<phone>+7 (81431) 4-53-06</phone>
+	</shop>
+	<shop>
+		<name>Магазин Навигатор</name>
+		<latitude>63.738087</latitude>
+		<longitude>34.291465</longitude>
+		<address>186420, Сегежский р-н, Сегежа г., ул. Спиридонова, 5</address>
+		<phone>+7 (81431) 7-37-19</phone>
+	</shop>
+</shops>

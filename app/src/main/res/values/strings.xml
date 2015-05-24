@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Рыбалка в Карелии</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
+
+    <string name="type_of_fish">Виды рыб</string>
+    <string name="lakes">Озёра</string>
+    <string name="hostels">Базы отдыха</string>
+    <string name="shops">Магазины</string>
+
+    <string name="action_settings">Settings</string>
+    <string-array name="menu_items">
+        <item>Базы отдыха</item>
+        <item>Магазины</item>
+        <item>Озера</item>
+        <item>Виды рыб</item>
+        <item>Правила поведения</item>
+        <item>Правила рыбалки</item>
+        <item>Рецепты</item>
+    </string-array>
+
+    <string-array name="sortingType">
+        <item>По алфавиту</item>
+        <item>По удаленности</item>
+    </string-array>
+
+    <string name="toListOfLakes">Показать список озёр</string>
+    <string name="toListOfFish">Показать список рыб</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_objects_list">ObjectsListActivity</string>
+
+</resources>

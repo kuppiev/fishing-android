@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="source_files">
+        <item>fishinfo.xml</item>
+        <item>lakes.xml</item>
+        <item>hostels.xml</item>
+        <item>shops.xml</item>
+    </string-array>
+    <string name="hostname">gets.cs.karelia.ru</string>
+    <string name="network_settings">netSettings.xml</string>
+    <string name="app_settings">appSettings.xml</string>
+</resources>

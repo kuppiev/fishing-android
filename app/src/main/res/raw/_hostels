@@ -1,0 +1,91 @@
+<response>
+	<status>
+		<code>0<⁄code>
+		<message>success<⁄message>
+	<⁄status>
+	<content>
+		<kml xmlns="http:⁄⁄www.opengis.net⁄kml⁄2.2">
+			<Document>
+				<name>any.kml<⁄name>
+				<open>1<⁄open>
+				<Style id="styleDocument">
+					<LabelStyle>
+						<color>ff0000cc<⁄color>
+					<⁄LabelStyle>
+				<⁄Style>
+				<Placemark>
+					<name>Автокемпинг &quot;Фрегат&quot;<⁄name>
+					<description>&lt;div class=&quot;info&quot;&gt;&lt;a href=&quot;http:⁄⁄www.ticrk.ru⁄ru⁄rests⁄6629.html&quot; target=&quot;_blank&quot;&gt;Подробнее&lt;⁄a&gt;&lt;⁄div&gt;<⁄description>
+					<ExtendedData xmlns:gets="http:⁄⁄gets.cs.petrsu.ru⁄">
+						<Data name="link">
+							<value>http:⁄⁄www.ticrk.ru⁄ru⁄rests⁄6629.html<⁄value>
+						<⁄Data>
+						<Data name="time">
+							<value>12 03 2014 17:19:14.306000<⁄value>
+						<⁄Data>
+						<Data name="uuid">
+							<value>28862<⁄value>
+						<⁄Data>
+						<Data name="access">
+							<value>r<⁄value>
+						<⁄Data>
+						<Data name="category_id">
+							<value>12<⁄value>
+						<⁄Data>
+					<⁄ExtendedData>
+					<Point>
+						<coordinates>30.5759,64.6025,0<⁄coordinates>
+					<⁄Point>
+				<⁄Placemark>
+				<Placemark>
+					<name>Автокемпинг Алекка<⁄name>
+					<description>&lt;div class=&quot;info&quot;&gt;&lt;a href=&quot;http:⁄⁄www.ticrk.ru⁄ru⁄rests⁄37274.html&quot; target=&quot;_blank&quot;&gt;Подробнее&lt;⁄a&gt;&lt;⁄div&gt;<⁄description>
+					<ExtendedData xmlns:gets="http:⁄⁄gets.cs.petrsu.ru⁄">
+						<Data name="link">
+							<value>http:⁄⁄www.ticrk.ru⁄ru⁄rests⁄37274.html<⁄value>
+						<⁄Data>
+						<Data name="time">
+							<value>12 03 2014 17:19:14.306000<⁄value>
+						<⁄Data>
+						<Data name="uuid">
+							<value>28863<⁄value>
+						<⁄Data>
+						<Data name="access">
+							<value>r<⁄value>
+						<⁄Data>
+						<Data name="category_id">
+							<value>12<⁄value>
+						<⁄Data>
+					<⁄ExtendedData>
+					<Point>
+						<coordinates>33.2529,61.8653,0<⁄coordinates>
+					<⁄Point>
+				<⁄Placemark>
+				<Placemark>
+					<name>Автокемпинг по дороге на Соловки<⁄name>
+					<description>&lt;div class=&quot;info&quot;&gt;&lt;a href=&quot;http:⁄⁄www.ticrk.ru⁄ru⁄rests⁄31839.html&quot; target=&quot;_blank&quot;&gt;Подробнее&lt;⁄a&gt;&lt;⁄div&gt;<⁄description>
+					<ExtendedData xmlns:gets="http:⁄⁄gets.cs.petrsu.ru⁄">
+						<Data name="link">
+							<value>http:⁄⁄www.ticrk.ru⁄ru⁄rests⁄31839.html<⁄value>
+						<⁄Data>
+						<Data name="time">
+							<value>12 03 2014 17:19:14.306000<⁄value>
+						<⁄Data>
+						<Data name="uuid">
+							<value>28864<⁄value>
+						<⁄Data>
+						<Data name="access">
+							<value>r<⁄value>
+						<⁄Data>
+						<Data name="category_id">
+							<value>12<⁄value>
+						<⁄Data>
+					<⁄ExtendedData>
+					<Point>
+						<coordinates>34.6664,64.4805,0<⁄coordinates>
+					<⁄Point>
+				<⁄Placemark>
+			<⁄Document>
+		<⁄kml>
+	<⁄content>
+<⁄response>
