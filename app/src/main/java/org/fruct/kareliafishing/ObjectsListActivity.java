@@ -281,6 +281,21 @@ public class ObjectsListActivity extends ActionBarActivity {
 
 	public void onShowOnMapButtonClick(View view)
 	{
+		int i;
+		int size = listLayout.getChildCount();
+		ListElement tmp;
 
+		ApplicationData.mapObjects().clear();
+
+		for (i = 0; i < size; i++)
+		{
+			tmp = (ListElement) listLayout.getChildAt(i);
+
+			if (tmp.isChecked())
+			{
+				ApplicationData.mapObjects().add(tmp.getAssociatedObject());
+				Log.e("loging", tmp.getAssociatedObject().getName());
+			}
+		}
 	}
 }

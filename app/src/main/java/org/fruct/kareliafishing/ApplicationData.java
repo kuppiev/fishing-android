@@ -20,6 +20,7 @@ import java.util.Set;
 class ApplicationData
 {
 	private static List<ObjectData> objects = null; // List of objects to be shown at ObjectsListActivity
+	private static List<ObjectData> mapObjects = null;
 	private static List<ObjectData> fish = null;    // List of all available fish;
 	private static List<ObjectData> hostels = null; // List of all available hostels
 	private static List<ObjectData> lakes = null;   // List of all available lakes
@@ -39,8 +40,23 @@ class ApplicationData
 		activity = _activity;
 		settings = new HashMap<>();
 		objects = new ArrayList<>();
+		mapObjects = new ArrayList<>();
 		loadSettings();
-		init = true;
+
+		try
+		{
+			setLakesData(Parser.parseLakes());
+			setFishData(Parser.parseFish());
+			Parser.convertHostels();
+			setHostelsData(Parser.parseHostels2());
+			setShopsData(Parser.parseShops());
+			init = true;
+		}
+		catch (Exception ex)
+		{
+			Log.e("Error", ex.toString());
+		}
+
 	}
 
 	public static boolean isInitialized() {
@@ -81,6 +97,9 @@ class ApplicationData
 
 	public static List<ObjectData> objectsData() {
 		return objects;
+	}
+	public static List<ObjectData> mapObjects() {
+		return mapObjects;
 	}
 
 	public static void showAllFish() {

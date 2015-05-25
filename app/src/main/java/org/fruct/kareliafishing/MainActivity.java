@@ -9,7 +9,9 @@ import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Xml;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,11 +22,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Iterator;
 
 import ru.yandex.yandexmapkit.*;
 import ru.yandex.yandexmapkit.map.*;
+import ru.yandex.yandexmapkit.overlay.Overlay;
+import ru.yandex.yandexmapkit.overlay.OverlayItem;
+import ru.yandex.yandexmapkit.overlay.balloon.BalloonItem;
+import ru.yandex.yandexmapkit.utils.GeoPoint;
 
 
 public class MainActivity extends ActionBarActivity
@@ -40,6 +49,10 @@ public class MainActivity extends ActionBarActivity
 	 */
 	private CharSequence mTitle;
 	private Intent toObjectsList;
+	private static MapView mMap = null;
+	private static MapController mMapController;
+	private static OverlayManager mOverlayManager;
+	//private static Overlay mOverlay;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +69,22 @@ public class MainActivity extends ActionBarActivity
 				(DrawerLayout) findViewById(R.id.drawer_layout));
 
 		String tmp = "";
-		//MapView mapView = new MapView(this.getApplicationContext(), "asd");
+
+		//if (null == mMap)
+		{
+			mMap = (MapView)findViewById(R.id.mapView);
+			mMapController = mMap.getMapController();
+			mMapController.addMapListener(new MapListener());
+			mOverlayManager = mMapController.getOverlayManager();
+
+			/*
+			OverlayItem item = new OverlayItem(mMapController.getMapCenter(), this.getResources().getDrawable(R.drawable.okun));
+			item.setVisible(true);
+			Overlay mOverlay = new Overlay(mMapController);
+			mOverlay.addOverlayItem(item);
+			mOverlayManager.addOverlay(mOverlay);
+			*/
+		}
 
 		try
 		{
@@ -65,22 +93,18 @@ public class MainActivity extends ActionBarActivity
 
 			if (!Parser.isInitialized()) {
 				Parser.initialize(this);
-				((TextView)findViewById(R.id.textView)).setText(Parser.tmp);
 			}
 
 			if (!NetworkData.isInitialized())
 				NetworkData.initialize(this);
 
-			ApplicationData.setLakesData(Parser.parseLakes());
-			ApplicationData.setFishData(Parser.parseFish());
-			Parser.convertHostels();
-			ApplicationData.setHostelsData(Parser.parseHostels2());
-			ApplicationData.setShopsData(Parser.parseShops());
 		}
 		catch (Exception ex)
 		{
 			Log.e("Error", ex.getMessage());
 		}
+
+		refreshMap();
 	}
 
 	@Override
@@ -197,8 +221,65 @@ public class MainActivity extends ActionBarActivity
 		}
 	}
 
+	private void refreshMap()
+	{
+		ObjectData processingObject;
+		double latitude, longitude;
+		OverlayItem newItem;
+		BalloonItem newBalloonItem = null;
+		Overlay newOverlay;
+		Iterator<ObjectData> it;
+
+		if (ApplicationData.mapObjects().isEmpty())
+			return;
+
+		newOverlay = new Overlay(mMapController);
+
+		for (it = ApplicationData.mapObjects().iterator(); it.hasNext();)
+		{
+			processingObject = it.next();
+
+			if (processingObject.getType() != ObjectData.LAKE)
+			{
+				latitude = Double.parseDouble(processingObject.getInfo("latitude"));
+				longitude = Double.parseDouble(processingObject.getInfo("longitude"));
+
+				Log.e("refreshMap()", processingObject.getName());
+				Log.e("latitude", String.valueOf(latitude));
+				Log.e("latitude", String.valueOf(mMapController.getMapCenter().getLat()));
+
+				newItem = new OverlayItem(new GeoPoint(latitude, longitude), null);
+
+				if (ObjectData.SHOP == processingObject.getType())
+					newItem.setDrawable(this.getResources().getDrawable(R.drawable.shop));
+				else if (ObjectData.HOSTEL == processingObject.getType())
+					newItem.setDrawable(this.getResources().getDrawable(R.drawable.hostel));
+
+				newItem.setVisible(true);
+
+				newBalloonItem = new BalloonItem(this, new GeoPoint(latitude, longitude));
+				newBalloonItem.setText(processingObject.getName());
+				newItem.setBalloonItem(newBalloonItem);
+
+				newOverlay.addOverlayItem(newItem);
+			}
+		}
+
+
+		mOverlayManager.addOverlay(newOverlay);
+	}
+
 	public void onClick(View view) throws Exception
 	{
 
+	}
+
+	class MapListener implements OnMapListener
+	{
+		@Override
+		public void onMapActionEvent( MapEvent mapEvent )
+		{
+
+		}
 	}
 }
