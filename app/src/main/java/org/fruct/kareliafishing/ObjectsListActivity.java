@@ -49,7 +49,15 @@ public class ObjectsListActivity extends ActionBarActivity {
 		if (ApplicationData.objectsData() == null)
 			return;
 		else if (ApplicationData.objectsData().isEmpty())
+		{
+			if (getIntent().hasExtra("title"))
+			{
+				this.setTitle(getIntent().getExtras().getString("title"));
+				ObjectsListActivity.title = this.getTitle().toString();
+			}
+
 			return;
+		}
 
 		switch (ApplicationData.objectsData().get(0).getType())
 		{
@@ -285,6 +293,9 @@ public class ObjectsListActivity extends ActionBarActivity {
 		int size = listLayout.getChildCount();
 		ListElement tmp;
 
+		if (0 == size)
+			return;
+
 		ApplicationData.mapObjects().clear();
 
 		for (i = 0; i < size; i++)
@@ -297,5 +308,7 @@ public class ObjectsListActivity extends ActionBarActivity {
 				Log.e("loging", tmp.getAssociatedObject().getName());
 			}
 		}
+
+		finish();
 	}
 }

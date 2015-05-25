@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
@@ -125,7 +126,7 @@ class NetworkData
 		}
 		catch (Exception ex)
 		{
-			Log.e("Error", ex.toString());
+			Log.e("sendRequest()", ex.toString());
 		}
 	}
 
@@ -151,7 +152,7 @@ class NetworkData
 		}
 		catch (Exception ex)
 		{
-			Log.e("Error", ex.toString());
+			Log.e("sendRequest()", ex.toString());
 		}
 
 		return null;
@@ -164,6 +165,9 @@ class NetworkData
 		BufferedReader in = new BufferedReader(new InputStreamReader(_connection.getInputStream()));
 		String inputLine;
 
+		File f = new File("/storage/sdcard0/" + responseFile + ".txt");
+		PrintWriter writer2 = new PrintWriter(new FileOutputStream(f));
+
 		while (true)
 		{
 			if ((inputLine = in.readLine()) != null)
@@ -172,7 +176,10 @@ class NetworkData
 				inputLine = inputLine.replace("%2F", "/");
 				inputLine = inputLine.replace("&amp;", "&");
 
-				writer.print(inputLine);
+				writer.println(inputLine);
+				writer2.println(inputLine);
+
+				Log.e("listen", inputLine);
 
 				if (inputLine.endsWith("</response>"))
 					break;
@@ -180,7 +187,8 @@ class NetworkData
 		}
 
 		in.close();
-		ostream.close();
+		writer.close();
+		writer2.close();
 	}
 
 	private static String listen(HttpURLConnection _connection) throws Exception
@@ -256,10 +264,11 @@ class NetworkThread extends Thread {
 				Log.e("Time", String.valueOf(end - start));
 				/*
 				Log.e("Task", curTask.getClass().toString());
+				*/
 
 				Log.e("Task", String.valueOf(curTask.option));
-				Log.e("Task", String.valueOf(curTask.option & Task.STOP_ON_ERROR));
-				*/
+				Log.e("Task", String.valueOf(curTask.option & Task.MULTIPLE));
+
 				if ((curTask.option & Task.STOP_ON_ERROR) != 0 && returnCode < 0)
 					NetworkData.removeTask(curTask);
 				if ((curTask.option & Task.MULTIPLE) == 0 && (curTask.option & Task.RETRY_ON_ERROR) == 0)
@@ -270,7 +279,7 @@ class NetworkThread extends Thread {
 		}
 		catch (Exception ex)
 		{
-			Log.e("Error occured", ex.toString());
+			Log.e("run()", ex.toString());
 		}
 
 		NetworkData.nthread = null;
@@ -334,7 +343,7 @@ class Request
 	{
 		Request request = new Request();
 		request.method = "POST";
-		request.request = String.format("<request><params><auth_token>%d</auth_token></params></request>", category_id);
+		request.request = String.format("<request><params><category_id>%d</category_id></params></request>", category_id);
 		request.protocol = "http";
 		request.hostname = NetworkData.activity.getString(R.string.hostname);
 		request.file = "/gets/service/loadPoints.php";

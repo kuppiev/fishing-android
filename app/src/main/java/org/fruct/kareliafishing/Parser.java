@@ -59,7 +59,7 @@ public abstract class Parser
 		}
 		catch (Exception ex)
 		{
-			Log.e("Error", ex.toString());
+			Log.e("Parser:init()", ex.toString());
 		}
 	}
 
@@ -209,92 +209,8 @@ public abstract class Parser
 		}
 		catch (Exception ex)
 		{
-			Log.e("Error", ex.toString());
+			Log.e("parseHostels()", ex.toString());
 		}
-
-		return retValue;
-	}
-
-	public static ArrayList<ObjectData> parseHostels2() throws Exception
-	{
-		ArrayList<ObjectData> retValue = null;
-		Integer i = 0;
-		InputStream istream = null;
-		String processingTag = null;
-		ObjectData processingObject = null;
-
-
-			retValue = new ArrayList<ObjectData>();
-			istream = activity.openFileInput("~~hostels");
-			Log.e("parser", "~~hostels");
-			xpp.setInput(new InputStreamReader(istream));
-
-			while (xpp.getEventType() != XmlPullParser.END_DOCUMENT)
-			{
-				try
-				{
-
-				switch (xpp.getEventType())
-				{
-					case XmlPullParser.START_DOCUMENT:
-						break;
-					case XmlPullParser.START_TAG:
-						processingTag = xpp.getName();
-
-						Log.e("START_TAG", processingTag);
-
-						if (processingTag.equals("hostel"))
-							processingObject = new ObjectData(ObjectData.HOSTEL);
-
-						break;
-
-					case XmlPullParser.END_TAG:
-						Log.e("END_TAG", xpp.getName());
-
-						if (xpp.getName().equals("hostel"))
-							retValue.add(processingObject);
-
-						processingTag = "";
-
-						break;
-
-					case XmlPullParser.TEXT:
-
-
-						switch (processingTag)
-						{
-							case "hostels":
-							case "hostel":
-								break;
-							case "id":
-								processingObject.setId(xpp.getText());
-								break;
-							case "name":
-								processingObject.setName(xpp.getText());
-								break;
-							case "description":
-								processingObject.setDescription(xpp.getText());
-								break;
-							default:
-								processingObject.setInfo(processingTag, xpp.getText());
-								break;
-						}
-
-						break;
-
-					default:
-						Log.e("i", Integer.toString(xpp.getEventType()));
-						break;
-				}
-
-				xpp.next();
-				}
-				catch (Exception ex)
-				{
-					Log.e("Error", ex.toString());
-				}
-			}
-
 
 		return retValue;
 	}
@@ -368,7 +284,7 @@ public abstract class Parser
 		}
 		catch (Exception ex)
 		{
-			Log.e("Error", ex.toString());
+			Log.e("parseShops()", ex.toString());
 		}
 
 		return retValue;
@@ -443,7 +359,7 @@ public abstract class Parser
 		}
 		catch (Exception ex)
 		{
-			Log.e("Error", ex.toString());
+			Log.e("ParseFish()", ex.toString());
 		}
 
 		return retValue;
@@ -540,7 +456,7 @@ public abstract class Parser
 		}
 		catch (Exception ex)
 		{
-			Log.e("Error", ex.toString());
+			//Log.e("parseLakes()", ex.toString());
 		}
 
 		return retValue;
@@ -548,6 +464,7 @@ public abstract class Parser
 
 	public static void convertHostels()
 	{
+		Log.e("Entering", "convertHostels()");
 		Integer i = 0;
 		FileInputStream istream = null;
 		FileOutputStream ostream = null;
@@ -566,15 +483,19 @@ public abstract class Parser
 			writer = new PrintWriter(ostream);
 			xpp.setInput(new InputStreamReader(istream));
 
-			while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
-				switch (xpp.getEventType()) {
+			while (xpp.getEventType() != XmlPullParser.END_DOCUMENT)
+			{
+				//Log.e("convertHostels()", "eventType: " + String.valueOf(xpp.getEventType()));
+
+				switch (xpp.getEventType())
+				{
 					case XmlPullParser.START_DOCUMENT:
 						writer.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
 						writer.println("<hostels>");
 						break;
 					case XmlPullParser.START_TAG:
 						processingTag = xpp.getName();
-						Log.e("START_TAG", processingTag);
+						//Log.e("convertHostels()", "START_TAG: " + processingTag);
 
 						switch (processingTag)
 						{
@@ -591,7 +512,7 @@ public abstract class Parser
 						break;
 
 					case XmlPullParser.END_TAG:
-						Log.e("END_TAG", xpp.getName());
+						//Log.e("END_TAG", xpp.getName());
 
 						switch (xpp.getName())
 						{
@@ -605,12 +526,11 @@ public abstract class Parser
 						break;
 
 					case XmlPullParser.TEXT:
-						Log.e("TAG", processingTag);
+						//Log.e("TAG", processingTag);
 
 						switch (processingTag)
 						{
 							case "name":
-								Log.e("namespace", String.valueOf(xpp.getDepth()));
 								if (xpp.getDepth() == 6)
 									writer.println(String.format("<name>%s</name>", xpp.getText()));
 								break;
@@ -631,18 +551,14 @@ public abstract class Parser
 
 								coordinates = String.valueOf(latitude).replace(',', '.');
 								writer.println(String.format("<latitude>%s</latitude>", coordinates));
-								Log.e("convert", String.format("<latitude>%s</latitude>", coordinates));
+								//Log.e("convert", String.format("<latitude>%s</latitude>", coordinates));
 
 								coordinates = String.valueOf(longitude).replace(',', '.');
 								writer.println(String.format("<longitude>%s</longitude>", coordinates));
-								Log.e("convert", String.format("<longitude>%s</longitude>", coordinates));
+								//Log.e("convert", String.format("<longitude>%s</longitude>", coordinates));
 
 								break;
 						}
-						break;
-
-					case XmlPullParser.END_DOCUMENT:
-						writer.println("</hostels>");
 						break;
 
 					default:
@@ -653,16 +569,284 @@ public abstract class Parser
 				xpp.next();
 			}
 
+			writer.println("</hostels>");
+
 			writer.close();
 			istream.close();
+
+			renameFile("~~hostels", "hostels.xml");
 		}
 		catch (Exception ex)
 		{
-			Log.e("Error", ex.toString());
+			Log.e("convertHostels()", ex.toString());
 		}
+	}
 
+	public static void convertShops()
+	{
+		Log.e("Entering", "convertShops()");
+		Integer i = 0;
+		FileInputStream istream = null;
+		FileOutputStream ostream = null;
+		PrintWriter writer = null;
+		String processingTag = null;
+		String processingAttr = null;
+		String coordinates = null;
+		String tmp;
+		double latitude, longitude;
+		int[] seporator_pos = new int[2];
 
+		try
+		{
+			istream = activity.openFileInput("~shops");
+			ostream = activity.openFileOutput("~~shops", Activity.MODE_PRIVATE);
+			writer = new PrintWriter(ostream);
+			xpp.setInput(new InputStreamReader(istream));
 
+			while (true)
+			{
+				if (xpp.getEventType() == XmlPullParser.END_DOCUMENT)
+					break;
+
+				switch (xpp.getEventType())
+				{
+					case XmlPullParser.START_DOCUMENT:
+						writer.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+						writer.println("<shops>");
+						break;
+					case XmlPullParser.START_TAG:
+						processingTag = xpp.getName();
+						//Log.e("convertShops()", "START_TAG: " + processingTag);
+
+						switch (processingTag)
+						{
+							case "Placemark":
+								writer.println("<shop>");
+								break;
+							case "Data":
+								processingAttr = xpp.getAttributeValue(0);
+								break;
+							default:
+								break;
+						}
+
+						break;
+
+					case XmlPullParser.END_TAG:
+						//Log.e("END_TAG", xpp.getName());
+
+						switch (xpp.getName())
+						{
+							case "Placemark":
+								writer.println("</shop>");
+								break;
+						}
+
+						processingTag = "";
+
+						break;
+
+					case XmlPullParser.TEXT:
+						//Log.e("TAG", processingTag);
+
+						switch (processingTag)
+						{
+							case "name":
+								if (xpp.getDepth() == 6)
+									writer.println(String.format("<name>%s</name>", xpp.getText()));
+								break;
+							case "description":
+								tmp = Html.escapeHtml(xpp.getText());
+								writer.println(String.format("<description>%s</description>", tmp));
+								break;
+							case "value":
+								if (processingAttr.equals("link"))
+									writer.println(String.format("<site>%s</site>", xpp.getText()));
+								break;
+							case "coordinates":
+								coordinates = xpp.getText();
+								seporator_pos[0] = coordinates.indexOf(",");
+								seporator_pos[1] = coordinates.lastIndexOf(",");
+								latitude = Double.parseDouble(coordinates.substring(0, seporator_pos[0]));
+								longitude = Double.parseDouble(coordinates.substring(seporator_pos[0] + 1, seporator_pos[1]));
+
+								coordinates = String.valueOf(latitude).replace(',', '.');
+								writer.println(String.format("<latitude>%s</latitude>", coordinates));
+								//Log.e("convert", String.format("<latitude>%s</latitude>", coordinates));
+
+								coordinates = String.valueOf(longitude).replace(',', '.');
+								writer.println(String.format("<longitude>%s</longitude>", coordinates));
+								//Log.e("convert", String.format("<longitude>%s</longitude>", coordinates));
+
+								break;
+						}
+						break;
+
+					default:
+						Log.e("i", Integer.toString(xpp.getEventType()));
+						break;
+				}
+
+				xpp.next();
+			}
+
+			writer.println("</shops>");
+
+			writer.close();
+			istream.close();
+
+			renameFile("~~shops", "shops.xml");
+		}
+		catch (Exception ex)
+		{
+			Log.e("convertShops()", ex.toString());
+		}
+	}
+
+	public static void convertFish()
+	{
+		Log.e("Entering", "convertFish()");
+		Integer i = 0;
+		FileInputStream istream = null;
+		FileOutputStream ostream = null;
+		PrintWriter writer = null;
+		String processingTag = null;
+		String processingAttr = null;
+		String coordinates = null;
+		String tmp;
+		double latitude, longitude;
+		int[] seporator_pos = new int[2];
+
+		try
+		{
+			istream = activity.openFileInput("~fishinfo");
+			ostream = activity.openFileOutput("~~fishinfo", Activity.MODE_PRIVATE);
+			writer = new PrintWriter(ostream);
+			xpp.setInput(new InputStreamReader(istream));
+
+			while (true)
+			{
+				if (xpp.getEventType() == XmlPullParser.END_DOCUMENT)
+					break;
+
+				switch (xpp.getEventType())
+				{
+					case XmlPullParser.START_DOCUMENT:
+						writer.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+						writer.println("<fishinfo>");
+						break;
+					case XmlPullParser.START_TAG:
+						processingTag = xpp.getName();
+						Log.e("convertFish()", "START_TAG: " + processingTag);
+
+						switch (processingTag)
+						{
+							case "Placemark":
+								writer.println("<shop>");
+								break;
+							case "Data":
+								processingAttr = xpp.getAttributeValue(0);
+								break;
+							default:
+								break;
+						}
+
+						break;
+
+					case XmlPullParser.END_TAG:
+						//Log.e("END_TAG", xpp.getName());
+
+						switch (xpp.getName())
+						{
+							case "Placemark":
+								writer.println("</shop>");
+								break;
+						}
+
+						processingTag = "";
+
+						break;
+
+					case XmlPullParser.TEXT:
+						//Log.e("TAG", processingTag);
+
+						switch (processingTag)
+						{
+							case "name":
+								if (xpp.getDepth() == 6)
+									writer.println(String.format("<name>%s</name>", xpp.getText()));
+								break;
+							case "description":
+								tmp = Html.escapeHtml(xpp.getText());
+								writer.println(String.format("<description>%s</description>", tmp));
+								break;
+							case "value":
+								if (processingAttr.equals("link"))
+									writer.println(String.format("<site>%s</site>", xpp.getText()));
+								break;
+							case "coordinates":
+								coordinates = xpp.getText();
+								seporator_pos[0] = coordinates.indexOf(",");
+								seporator_pos[1] = coordinates.lastIndexOf(",");
+								latitude = Double.parseDouble(coordinates.substring(0, seporator_pos[0]));
+								longitude = Double.parseDouble(coordinates.substring(seporator_pos[0] + 1, seporator_pos[1]));
+
+								coordinates = String.valueOf(latitude).replace(',', '.');
+								writer.println(String.format("<latitude>%s</latitude>", coordinates));
+								//Log.e("convert", String.format("<latitude>%s</latitude>", coordinates));
+
+								coordinates = String.valueOf(longitude).replace(',', '.');
+								writer.println(String.format("<longitude>%s</longitude>", coordinates));
+								//Log.e("convertFish", String.format("<longitude>%s</longitude>", coordinates));
+
+								break;
+						}
+						break;
+
+					default:
+						Log.e("i", Integer.toString(xpp.getEventType()));
+						break;
+				}
+
+				xpp.next();
+			}
+
+			writer.println("</shops>");
+
+			writer.close();
+			istream.close();
+
+			renameFile("~~shops", "shops.xml");
+		}
+		catch (Exception ex)
+		{
+			Log.e("convertShops()", ex.toString());
+		}
+	}
+
+	private static void renameFile(String _oldname, String _newname)
+	{
+		try
+		{
+			FileInputStream istream = activity.openFileInput(_oldname);
+			FileOutputStream ostream = activity.openFileOutput(_newname, Activity.MODE_PRIVATE);
+
+			byte[] buffer = new byte[1024];
+
+			while (0 < istream.read(buffer))
+			{
+				ostream.write(buffer);
+			}
+
+			istream.close();
+			ostream.close();
+
+			activity.deleteFile(_oldname);
+		}
+		catch (Exception ex)
+		{
+			Log.e("renameFile()", ex.toString());
+		}
 	}
 
 	public static String getTextValue(String _request, String _tagName)

@@ -82,11 +82,11 @@ public class NavigationDrawerFragment extends Fragment {
 		if (toObjectsList == null)
 			toObjectsList = new Intent(this.getActivity(), ObjectsListActivity.class);
 
-		if (!ApplicationData.isInitialized())
-			ApplicationData.initialize(this.getActivity());
-
 		if (!Parser.isInitialized())
 			Parser.initialize(this.getActivity());
+
+		if (!ApplicationData.isInitialized())
+			ApplicationData.initialize(this.getActivity());
 
 		// Select either the default item (0) or the last selected item.
 		// selectItem(mCurrentSelectedPosition);
@@ -252,6 +252,10 @@ public class NavigationDrawerFragment extends Fragment {
 
 		if (mDrawerLayout != null) {
 			mDrawerLayout.closeDrawer(mFragmentContainerView);
+		}
+
+		if (mDrawerListView != null) {
+			mDrawerListView.setItemChecked(position, false);
 		}
 
 		if (switchToActivity)

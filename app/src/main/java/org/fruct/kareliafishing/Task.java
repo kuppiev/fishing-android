@@ -2,7 +2,9 @@ package org.fruct.kareliafishing;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
+import java.io.File;
 import java.net.UnknownHostException;
 
 /**
@@ -125,18 +127,34 @@ class WaitForGoogleAuthTask extends Task
 
 class UpdateTask extends Task
 {
-	public UpdateTask() {}
+	public UpdateTask()
+	{
+		this.option = Task.NO_DUPLICATE;
+	}
 
 	public int doTask()
 	{
-		//NetworkData.sendRequestForResponse(Request.loadPoints(12), "~fishinfo");
+		//NetworkData.sendRequestForResponse(Request.getCategories(""), "~fishinfo");
 		//NetworkData.sendRequestForResponse(Request.loadPoints(12), "~lakes");
-		NetworkData.sendRequestForResponse(Request.loadPoints(12), "~hostels");
-		//NetworkData.sendRequestForResponse(Request.loadPoints(12), "~shops");
+		NetworkData.sendRequestForResponse(Request.loadPoints(3), "~hostels");
+		NetworkData.sendRequestForResponse(Request.loadPoints(1), "~shops");
 
+		Parser.convertHostels();
+		Parser.convertShops();
 
+		try
+		{
+			ApplicationData.setHostelsData(Parser.parseHostels());
+			ApplicationData.setShopsData(Parser.parseShops());
+			return 0;
+		}
+		catch (Exception ex)
+		{
+			Log.e("UpdateTask:doTask()", ex.toString());
+			return -1;
+		}
 
-		return 0;
+		//return 0;
 	}
 
 }

@@ -45,16 +45,18 @@ class ApplicationData
 
 		try
 		{
-			setLakesData(Parser.parseLakes());
-			setFishData(Parser.parseFish());
-			Parser.convertHostels();
-			setHostelsData(Parser.parseHostels2());
-			setShopsData(Parser.parseShops());
-			init = true;
+			if (Parser.isInitialized())
+			{
+				setLakesData(Parser.parseLakes());
+				setFishData(Parser.parseFish());
+				setHostelsData(Parser.parseHostels());
+				setShopsData(Parser.parseShops());
+				init = true;
+			}
 		}
 		catch (Exception ex)
 		{
-			Log.e("Error", ex.toString());
+			Log.e("AppData:init()", ex.toString());
 		}
 
 	}
@@ -189,7 +191,7 @@ class ApplicationData
 		}
 		catch (Exception ex)
 		{
-			Log.e("Error", ex.toString());
+			Log.e("AppData:saveSettings()", ex.toString());
 		}
 	}
 
@@ -228,7 +230,7 @@ class ApplicationData
 		}
 		catch (Exception ex)
 		{
-			Log.e("Error", ex.toString());
+			Log.e("AppData:loadSettings()", ex.toString());
 		}
 	}
 }

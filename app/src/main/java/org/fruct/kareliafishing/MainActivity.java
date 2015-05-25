@@ -52,7 +52,7 @@ public class MainActivity extends ActionBarActivity
 	private static MapView mMap = null;
 	private static MapController mMapController;
 	private static OverlayManager mOverlayManager;
-	//private static Overlay mOverlay;
+	private static Overlay mOverlay = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,45 +64,38 @@ public class MainActivity extends ActionBarActivity
 		mTitle = getTitle();
 
 		// Set up the drawer.
-		mNavigationDrawerFragment.setUp(
-				R.id.navigation_drawer,
-				(DrawerLayout) findViewById(R.id.drawer_layout));
+		mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 
-		String tmp = "";
-
-		//if (null == mMap)
-		{
-			mMap = (MapView)findViewById(R.id.mapView);
-			mMapController = mMap.getMapController();
-			mMapController.addMapListener(new MapListener());
-			mOverlayManager = mMapController.getOverlayManager();
-
-			/*
-			OverlayItem item = new OverlayItem(mMapController.getMapCenter(), this.getResources().getDrawable(R.drawable.okun));
-			item.setVisible(true);
-			Overlay mOverlay = new Overlay(mMapController);
-			mOverlay.addOverlayItem(item);
-			mOverlayManager.addOverlay(mOverlay);
-			*/
-		}
+		mMap = (MapView)findViewById(R.id.mapView);
+		mMapController = mMap.getMapController();
+		mMapController.addMapListener(new MapListener());
+		mOverlayManager = mMapController.getOverlayManager();
 
 		try
 		{
+			if (!Parser.isInitialized())
+				Parser.initialize(this);
+
 			if (!ApplicationData.isInitialized())
 				ApplicationData.initialize(this);
 
-			if (!Parser.isInitialized()) {
-				Parser.initialize(this);
-			}
-
 			if (!NetworkData.isInitialized())
 				NetworkData.initialize(this);
-
 		}
 		catch (Exception ex)
 		{
-			Log.e("Error", ex.getMessage());
+			Log.e("MainActivity:onCreate()", ex.getMessage());
 		}
+	}
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+
+		mMapController.hideBalloon();
+		if (null != mOverlay)
+			mOverlayManager.removeOverlay(mOverlay);
 
 		refreshMap();
 	}
@@ -140,7 +133,7 @@ public class MainActivity extends ActionBarActivity
 		}
 		catch (Exception ex)
 		{
-			Log.e("Error", ex.toString());
+			Log.e("onSectionAttached()", ex.toString());
 		}
 
 	}
@@ -226,14 +219,13 @@ public class MainActivity extends ActionBarActivity
 		ObjectData processingObject;
 		double latitude, longitude;
 		OverlayItem newItem;
-		BalloonItem newBalloonItem = null;
-		Overlay newOverlay;
+		BalloonItem newBalloonItem;
 		Iterator<ObjectData> it;
 
 		if (ApplicationData.mapObjects().isEmpty())
 			return;
 
-		newOverlay = new Overlay(mMapController);
+		mOverlay = new Overlay(mMapController);
 
 		for (it = ApplicationData.mapObjects().iterator(); it.hasNext();)
 		{
@@ -246,7 +238,7 @@ public class MainActivity extends ActionBarActivity
 
 				Log.e("refreshMap()", processingObject.getName());
 				Log.e("latitude", String.valueOf(latitude));
-				Log.e("latitude", String.valueOf(mMapController.getMapCenter().getLat()));
+				Log.e("longitude", String.valueOf(longitude));
 
 				newItem = new OverlayItem(new GeoPoint(latitude, longitude), null);
 
@@ -261,16 +253,16 @@ public class MainActivity extends ActionBarActivity
 				newBalloonItem.setText(processingObject.getName());
 				newItem.setBalloonItem(newBalloonItem);
 
-				newOverlay.addOverlayItem(newItem);
+				mOverlay.addOverlayItem(newItem);
 			}
 		}
 
-
-		mOverlayManager.addOverlay(newOverlay);
+		mOverlayManager.addOverlay(mOverlay);
 	}
 
 	public void onClick(View view) throws Exception
 	{
+		NetworkData.addTask(new UpdateTask());
 
 	}
 
