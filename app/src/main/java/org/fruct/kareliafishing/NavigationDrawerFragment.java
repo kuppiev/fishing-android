@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -110,7 +109,7 @@ public class NavigationDrawerFragment extends Fragment {
 				selectItem(position);
 			}
 		});
-		mDrawerListView.setAdapter(new ArrayAdapter<String>(
+		mDrawerListView.setAdapter(new ArrayAdapter<>(
 				getActionBar().getThemedContext(),
 				android.R.layout.simple_list_item_activated_1,
 				android.R.id.text1,
@@ -217,34 +216,32 @@ public class NavigationDrawerFragment extends Fragment {
 		{
 			case 0:
 				toObjectsList.putExtra("title", titles[0]);
-				ApplicationData.showAllHostels();
+				ApplicationData.showAll(ObjectData.HOSTEL);
 				break;
 			case 1:
 				toObjectsList.putExtra("title", titles[1]);
-				ApplicationData.showAllShops();
+				ApplicationData.showAll(ObjectData.SHOP);
 				break;
 			case 2:
 				toObjectsList.putExtra("title", titles[2]);
-				ApplicationData.showAllLakes();
+				ApplicationData.showAll(ObjectData.LAKE);
 				break;
 			case 3:
 				toObjectsList.putExtra("title", titles[3]);
-				ApplicationData.showAllFish();
+				ApplicationData.showAll(ObjectData.FISH);
 				break;
-			/*
 			case 4:
 				toObjectsList.putExtra("title", titles[4]);
-				//ApplicationData.showAllBehaviorRules();
+				ApplicationData.showAll(ObjectData.BEHAVIOR_RULE);
 				break;
 			case 5:
 				toObjectsList.putExtra("title", titles[5]);
-				//ApplicationData.showAllFishingRules();
+				ApplicationData.showAll(ObjectData.FISHING_RULE);
 				break;
 			case 6:
 				toObjectsList.putExtra("title", titles[6]);
-				//ApplicationData.showAllRecipes();
+				ApplicationData.showAll(ObjectData.RECIPE);
 				break;
-			*/
 			default:
 				switchToActivity = false;
 				break;

@@ -27,7 +27,7 @@ class ObjectData {
 	{
 		if (_type == null)
 			throw new NullPointerException("_type is null");
-		if (!(_type >= 1 && _type <= 4))
+		if (!(_type >= 1 && _type <= 7))
 			throw new UnknownTypeObjectException("Unknown object's type:" + _type.toString());
 
 		info = new HashMap<String, String>();

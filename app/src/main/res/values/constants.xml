@@ -5,6 +5,9 @@
         <item>lakes.xml</item>
         <item>hostels.xml</item>
         <item>shops.xml</item>
+        <item>behaviour_rules.xml</item>
+        <item>fishing_rules.xml</item>
+        <item>recipes.xml</item>
     </string-array>
     <string name="hostname">gets.cs.karelia.ru</string>
     <string name="network_settings">netSettings.xml</string>

@@ -1,7 +1,12 @@
 package org.fruct.kareliafishing;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -260,9 +265,10 @@ public class MainActivity extends ActionBarActivity
 		mOverlayManager.addOverlay(mOverlay);
 	}
 
-	public void onClick(View view) throws Exception
+	public void onClick(View view)
 	{
-		NetworkData.addTask(new UpdateTask());
+		//NetworkData.addTask(new UpdateTask());
+		new Update().execute();
 
 	}
 

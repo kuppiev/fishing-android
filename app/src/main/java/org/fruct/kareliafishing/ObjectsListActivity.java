@@ -2,34 +2,26 @@ package org.fruct.kareliafishing;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.text.Collator;
 import java.util.ArrayList;
-//import java.util.Collection;
-//import java.util.Iterator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-//import java.util.ListIterator;
 
 
 public class ObjectsListActivity extends ActionBarActivity {
@@ -63,7 +55,10 @@ public class ObjectsListActivity extends ActionBarActivity {
 		{
 			case ObjectData.BEHAVIOR_RULE:
 			case ObjectData.FISHING_RULE:
+				setContentView(R.layout.activity_objects_list_rule);
+				break;
 			case ObjectData.RECIPE:
+				setContentView(R.layout.activity_objects_list_recipe);
 				break;
 			case ObjectData.LAKE:
 				setContentView(R.layout.activity_objects_list_lake);
@@ -107,7 +102,7 @@ public class ObjectsListActivity extends ActionBarActivity {
 			this.setTitle(ObjectsListActivity.title);
 
 		if (listElements == null)
-			listElements = new ArrayList<ListElement>();
+			listElements = new ArrayList<>();
 
 		listLayout.removeAllViews();
 
@@ -222,6 +217,7 @@ public class ObjectsListActivity extends ActionBarActivity {
 				{
 					showOnMapButton.setText("Показать " + Integer.toString(count) + " на карте");
 					showOnMapButton.setVisibility(VISIBLE);
+
 				}
 			}
 		}

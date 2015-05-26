@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.text.Html;
 import android.util.Log;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -26,7 +25,6 @@ public abstract class Parser
 	private static String[] source_files = null;
 	private static XmlPullParserFactory xppf = null;
 	private static XmlPullParser xpp = null;
-	public static String tmp = null;
 
 	public static void initialize(Activity _activity)
 	{
@@ -43,7 +41,7 @@ public abstract class Parser
 
 			File f;
 
-			for (Integer i = 0; i < source_files.length; i++)
+			for (Integer i = 0; i < source_files.length - 3; i++)
 			{
 				f = new File(activity.getFilesDir().getAbsolutePath() + "/" + source_files[i]);
 
@@ -52,8 +50,6 @@ public abstract class Parser
 					saveXmlInDeviceMemory(i + 1);
 				}
 			}
-
-			saveXmlInDeviceMemory();
 
 			init = true;
 		}
@@ -88,19 +84,6 @@ public abstract class Parser
 			case ObjectData.SHOP:
 				istream = activity.getResources().openRawResource(R.raw.shops);
 				break;
-			/*
-			case ObjectData.BEHAVIOR_RULE:
-				istream = activity.getResources().openRawResource(R.raw.shops);
-				break;
-
-			case ObjectData.FISHING_RULE:
-				istream = activity.getResources().openRawResource(R.raw.shops);
-				break;
-
-			case ObjectData.RECIPE:
-				istream = activity.getResources().openRawResource(R.raw.shops);
-				break;
-			*/
 			default:
 				throw new Exception("Unknown object's type");
 		}
@@ -114,30 +97,6 @@ public abstract class Parser
 		ostream.close();
 
 		Log.e("info", "File \'" + source_files[_type - 1] + "\' was created");
-	}
-
-	private static void saveXmlInDeviceMemory() throws Exception
-	{
-		String tmp;
-		InputStream istream;
-		byte[] buffer = new byte[2048];
-
-		FileOutputStream ostream = activity.openFileOutput("~hostels", Activity.MODE_PRIVATE);
-		istream = activity.getResources().openRawResource(R.raw._hostels);
-		PrintWriter writer = new PrintWriter(ostream);
-		InputStreamReader isr = new InputStreamReader(istream);
-		BufferedReader reader = new BufferedReader(isr);
-
-		while (null != (tmp = reader.readLine()))
-		{
-			tmp = tmp.replace(String.valueOf(Character.toChars(8260)), "/");
-			writer.println(tmp);
-		}
-
-		writer.close();
-		reader.close();
-
-		Log.e("info", "File \"~hostels\"");
 	}
 
 	public static ArrayList<ObjectData> parseHostels()
@@ -293,14 +252,13 @@ public abstract class Parser
 	public static ArrayList<ObjectData> parseFish()
 	{
 		ArrayList<ObjectData> retValue = null;
-		Integer i = 0;
-		InputStream istream = null;
+		InputStream istream;
 		String processingTag = null;
 		ObjectData processingObject = null;
 
 		try
 		{
-			retValue = new ArrayList<ObjectData>();
+			retValue = new ArrayList<>();
 			istream = activity.openFileInput(source_files[ObjectData.FISH - 1]);
 			Log.e("parser", source_files[ObjectData.FISH - 1]);
 			xpp.setInput(new InputStreamReader(istream));
@@ -327,6 +285,9 @@ public abstract class Parser
 						break;
 
 					case XmlPullParser.TEXT:
+
+						if (null == processingTag)
+							break;
 
 						switch (processingTag)
 						{
@@ -368,14 +329,14 @@ public abstract class Parser
 	public static ArrayList<ObjectData> parseLakes()
 	{
 		ArrayList<ObjectData> retValue = null;
-		Integer i = 0, points_count = 0, fish_count = 0;
-		InputStream istream = null;
+		Integer points_count = 0, fish_count = 0;
+		InputStream istream;
 		String processingTag = null;
 		ObjectData processingObject = null;
 
 		try
 		{
-			retValue = new ArrayList<ObjectData>();
+			retValue = new ArrayList<>();
 			istream = activity.openFileInput(source_files[ObjectData.LAKE - 1]);
 			Log.e("parser", source_files[ObjectData.LAKE - 1]);
 			xpp.setInput(new InputStreamReader(istream));
@@ -409,6 +370,9 @@ public abstract class Parser
 						break;
 
 					case XmlPullParser.TEXT:
+
+						if (null == processingTag)
+							break;
 
 						switch (processingTag)
 						{
@@ -462,16 +426,242 @@ public abstract class Parser
 		return retValue;
 	}
 
+	public static ArrayList<ObjectData> parseBehaviourRules()
+	{
+		ArrayList<ObjectData> retValue = null;
+		String processingTag = null;
+		ObjectData processingObject = null;
+		XmlPullParser xpp = activity.getResources().getXml(R.xml.behaviour_rules);
+
+		try
+		{
+			retValue = new ArrayList<>();
+			Log.e("parser", source_files[ObjectData.BEHAVIOR_RULE - 1]);
+
+			while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+				switch (xpp.getEventType()) {
+					case XmlPullParser.START_DOCUMENT:
+						break;
+					case XmlPullParser.START_TAG:
+						processingTag = xpp.getName();
+
+						Log.e("parseBehaviourRules()", processingTag);
+
+						if (processingTag.equals("rule"))
+							processingObject = new ObjectData(ObjectData.BEHAVIOR_RULE);
+
+						break;
+
+					case XmlPullParser.END_TAG:
+
+						if (xpp.getName().equals("rule"))
+							retValue.add(processingObject);
+
+						processingTag = "";
+
+						break;
+
+					case XmlPullParser.TEXT:
+
+						if (null == processingTag)
+							break;
+
+						switch (processingTag)
+						{
+							case "behaviour_rules":
+							case "rule":
+								break;
+							case "id":
+								processingObject.setId(xpp.getText());
+								break;
+							case "name":
+								processingObject.setName(xpp.getText());
+								break;
+							case "description":
+								processingObject.setDescription(xpp.getText());
+								break;
+							default:
+								processingObject.setInfo(processingTag, xpp.getText());
+								break;
+						}
+
+						break;
+
+					default:
+						Log.e("i", Integer.toString(xpp.getEventType()));
+						break;
+				}
+
+				xpp.next();
+			}
+		}
+		catch (Exception ex)
+		{
+			Log.e("parseBehaviourRules()", ex.toString());
+		}
+
+		return retValue;
+	}
+
+	public static ArrayList<ObjectData> parseFishingRules()
+	{
+		ArrayList<ObjectData> retValue = null;
+		String processingTag = null;
+		ObjectData processingObject = null;
+		XmlPullParser xpp = activity.getResources().getXml(R.xml.fishing_rules);
+
+		try
+		{
+			retValue = new ArrayList<>();
+			Log.e("parser", source_files[ObjectData.FISHING_RULE - 1]);
+
+			while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+				switch (xpp.getEventType()) {
+					case XmlPullParser.START_DOCUMENT:
+						break;
+					case XmlPullParser.START_TAG:
+						processingTag = xpp.getName();
+
+						if (processingTag.equals("rule"))
+							processingObject = new ObjectData(ObjectData.FISHING_RULE);
+
+						break;
+
+					case XmlPullParser.END_TAG:
+
+						if (xpp.getName().equals("rule"))
+							retValue.add(processingObject);
+
+						processingTag = "";
+
+						break;
+
+					case XmlPullParser.TEXT:
+
+						if (null == processingTag)
+							break;
+
+						switch (processingTag)
+						{
+							case "fishing_rules":
+							case "rule":
+								break;
+							case "id":
+								processingObject.setId(xpp.getText());
+								break;
+							case "name":
+								processingObject.setName(xpp.getText());
+								break;
+							case "description":
+								processingObject.setDescription(xpp.getText());
+								break;
+							default:
+								processingObject.setInfo(processingTag, xpp.getText());
+								break;
+						}
+
+						break;
+
+					default:
+						Log.e("i", Integer.toString(xpp.getEventType()));
+						break;
+				}
+
+				xpp.next();
+			}
+		}
+		catch (Exception ex)
+		{
+			Log.e("parseFishingRules()", ex.toString());
+		}
+
+		return retValue;
+	}
+
+	public static ArrayList<ObjectData> parseRecipes()
+	{
+		ArrayList<ObjectData> retValue = null;
+		String processingTag = null;
+		ObjectData processingObject = null;
+		XmlPullParser xpp = activity.getResources().getXml(R.xml.recipes);
+
+		try
+		{
+			retValue = new ArrayList<>();
+			Log.e("parser", source_files[ObjectData.RECIPE - 1]);
+
+			while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+				switch (xpp.getEventType()) {
+					case XmlPullParser.START_DOCUMENT:
+						break;
+					case XmlPullParser.START_TAG:
+						processingTag = xpp.getName();
+
+						if (processingTag.equals("recipe"))
+							processingObject = new ObjectData(ObjectData.RECIPE);
+
+						break;
+
+					case XmlPullParser.END_TAG:
+
+						if (xpp.getName().equals("recipe"))
+							retValue.add(processingObject);
+
+						processingTag = "";
+
+						break;
+
+					case XmlPullParser.TEXT:
+
+						if (null == processingTag)
+							break;
+
+						switch (processingTag)
+						{
+							case "recipes":
+							case "recipe":
+								break;
+							case "id":
+								processingObject.setId(xpp.getText());
+								break;
+							case "name":
+								processingObject.setName(xpp.getText());
+								break;
+							case "description":
+								processingObject.setDescription(xpp.getText());
+								break;
+							default:
+								processingObject.setInfo(processingTag, xpp.getText());
+								break;
+						}
+
+						break;
+
+					default:
+						Log.e("i", Integer.toString(xpp.getEventType()));
+						break;
+				}
+
+				xpp.next();
+			}
+		}
+		catch (Exception ex)
+		{
+			Log.e("parseRecipes()", ex.toString());
+		}
+
+		return retValue;
+	}
+
 	public static void convertHostels()
 	{
 		Log.e("Entering", "convertHostels()");
-		Integer i = 0;
-		FileInputStream istream = null;
-		FileOutputStream ostream = null;
-		PrintWriter writer = null;
+		FileInputStream istream;
+		FileOutputStream ostream;
+		PrintWriter writer;
 		String processingTag = null;
 		String processingAttr = null;
-		String coordinates = null;
+		String coordinates;
 		String tmp;
 		double latitude, longitude;
 		int[] seporator_pos = new int[2];
@@ -485,8 +675,6 @@ public abstract class Parser
 
 			while (xpp.getEventType() != XmlPullParser.END_DOCUMENT)
 			{
-				//Log.e("convertHostels()", "eventType: " + String.valueOf(xpp.getEventType()));
-
 				switch (xpp.getEventType())
 				{
 					case XmlPullParser.START_DOCUMENT:
@@ -495,7 +683,6 @@ public abstract class Parser
 						break;
 					case XmlPullParser.START_TAG:
 						processingTag = xpp.getName();
-						//Log.e("convertHostels()", "START_TAG: " + processingTag);
 
 						switch (processingTag)
 						{
@@ -512,7 +699,6 @@ public abstract class Parser
 						break;
 
 					case XmlPullParser.END_TAG:
-						//Log.e("END_TAG", xpp.getName());
 
 						switch (xpp.getName())
 						{
@@ -526,7 +712,9 @@ public abstract class Parser
 						break;
 
 					case XmlPullParser.TEXT:
-						//Log.e("TAG", processingTag);
+
+						if (null == processingTag)
+							break;
 
 						switch (processingTag)
 						{
@@ -585,16 +773,15 @@ public abstract class Parser
 	public static void convertShops()
 	{
 		Log.e("Entering", "convertShops()");
-		Integer i = 0;
-		FileInputStream istream = null;
-		FileOutputStream ostream = null;
-		PrintWriter writer = null;
+		FileInputStream istream;
+		FileOutputStream ostream;
+		PrintWriter writer;
 		String processingTag = null;
 		String processingAttr = null;
-		String coordinates = null;
+		String coordinates;
 		String tmp;
 		double latitude, longitude;
-		int[] seporator_pos = new int[2];
+		int[] separator_pos = new int[2];
 
 		try
 		{
@@ -665,10 +852,10 @@ public abstract class Parser
 								break;
 							case "coordinates":
 								coordinates = xpp.getText();
-								seporator_pos[0] = coordinates.indexOf(",");
-								seporator_pos[1] = coordinates.lastIndexOf(",");
-								latitude = Double.parseDouble(coordinates.substring(0, seporator_pos[0]));
-								longitude = Double.parseDouble(coordinates.substring(seporator_pos[0] + 1, seporator_pos[1]));
+								separator_pos[0] = coordinates.indexOf(",");
+								separator_pos[1] = coordinates.lastIndexOf(",");
+								latitude = Double.parseDouble(coordinates.substring(0, separator_pos[0]));
+								longitude = Double.parseDouble(coordinates.substring(separator_pos[0] + 1, separator_pos[1]));
 
 								coordinates = String.valueOf(latitude).replace(',', '.');
 								writer.println(String.format("<latitude>%s</latitude>", coordinates));

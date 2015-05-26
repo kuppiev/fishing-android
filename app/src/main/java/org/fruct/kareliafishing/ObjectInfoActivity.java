@@ -44,8 +44,15 @@ public class ObjectInfoActivity extends ActionBarActivity {
 			case ObjectData.SHOP:
 				setContentView(R.layout.activity_object_info_shop);
 				break;
+			case ObjectData.BEHAVIOR_RULE:
+			case ObjectData.FISHING_RULE:
+				setContentView(R.layout.activity_object_info_rule);
+				break;
+			case ObjectData.RECIPE:
+				setContentView(R.layout.activity_object_info_recipe);
+				break;
 			default:
-				setContentView(R.layout.activity_object_info_fish);
+				finish();
 				break;
 		}
 
@@ -55,12 +62,23 @@ public class ObjectInfoActivity extends ActionBarActivity {
 		setTitle(getIntent().getStringExtra("title"));
 
 		description_txtView.setText(object.getDescription());
-		Integer img_id = getResources().getIdentifier(object.getId(), "drawable", getPackageName());
 
-		if (img_id == 0)
-			imageView.setImageDrawable(getResources().getDrawable(R.drawable.unavailable));
-		else
-			imageView.setImageDrawable(getResources().getDrawable(img_id));
+		switch (object.getType())
+		{
+			case ObjectData.FISH:
+				int img_id = getResources().getIdentifier(object.getId(), "drawable", getPackageName());
+
+				if (img_id == 0)
+					imageView.setImageDrawable(getResources().getDrawable(R.drawable.unavailable));
+				else
+					imageView.setImageDrawable(getResources().getDrawable(img_id));
+
+				imageView.setVisibility(View.INVISIBLE);
+				break;
+			default:
+				imageView.setVisibility(View.VISIBLE);
+				break;
+		}
 	}
 
 	@Override

@@ -30,7 +30,11 @@
     <string name="toListOfLakes">Показать список озёр</string>
     <string name="toListOfFish">Показать список рыб</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <string name="update">Обновление</string>
+    <string name="updateSuccess">Обновление базы успешно завершено</string>
+    <string name="updateFailure">Обновление базы не удалось</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_objects_list">ObjectsListActivity</string>
 

@@ -32,7 +32,6 @@ class NetworkData
 	private static boolean init = false;
 	protected static String id = null;
 	protected static String token = null;
-	protected static NetworkThread nthread = null;
 	protected static Activity activity = null;
 
 	private NetworkData(){}
@@ -44,11 +43,6 @@ class NetworkData
 
 		activity = _activity;
 
-		if (tasks == null)
-			tasks = new ArrayList<Task>();
-
-		msg = "";
-
 		loadNetworkSettings();
 
 		init = true;
@@ -59,52 +53,7 @@ class NetworkData
 		return init;
 	}
 
-	public static synchronized void addTask(Task _task)
-	{
-		if (_task == null)
-			return;
-
-		if ((_task.option & Task.NO_DUPLICATE) != 0)
-		{
-			Iterator<Task>	it = tasks.iterator();
-
-			for (; it.hasNext(); ) {
-				if (it.next().getClass().equals(_task.getClass())) {
-					Log.e("addTask()", "already have this task");
-					return;
-				}
-			}
-		}
-
-		tasks.add(_task);
-
-		if (nthread == null)
-			nthread = new NetworkThread();
-	}
-
-	protected static synchronized Task getTask()
-	{
-		if (tasks == null)
-			return null;
-
-		if (tasks.isEmpty())
-			return null;
-
-		Task tmp = tasks.remove(0);
-		tasks.add(tmp);
-
-		return tmp;
-	}
-
-	protected static synchronized void removeTask(Task _task)
-	{
-		if (_task == null)
-			return;
-
-		tasks.remove(_task);
-	}
-
-	protected static void sendRequestForResponse(Request _request, String responseFile)
+	protected static void sendRequestForResponse(Request _request, String responseFile) throws Exception
 	{
 		URL url;
 		HttpURLConnection connection;
@@ -127,6 +76,7 @@ class NetworkData
 		catch (Exception ex)
 		{
 			Log.e("sendRequest()", ex.toString());
+			throw ex;
 		}
 	}
 
@@ -221,68 +171,6 @@ class NetworkData
 	{
 		NetworkData.id = ApplicationData.getSetting("net_id");
 		NetworkData.token = ApplicationData.getSetting("net_token");
-	}
-}
-
-class NetworkThread extends Thread {
-
-	private Task curTask;
-
-	public NetworkThread()
-	{
-		start();
-	}
-
-	public void run()
-	{
-		int returnCode, i;
-		long start, end;
-
-		try
-		{
-			Log.e("Info", "Thread created");
-
-			while (true)
-			{
-				start = new Date().getTime();
-
-				curTask = NetworkData.getTask();
-
-				if (curTask != null)
-				{
-					if (curTask.timeOfLastExecute + curTask.interval < start)
-						returnCode = curTask.doTask();
-					else
-						continue;
-				}
-				else
-					break;
-
-				end = new Date().getTime();
-				curTask.timeOfLastExecute = end;
-
-				Log.e("Time", String.valueOf(end - start));
-				/*
-				Log.e("Task", curTask.getClass().toString());
-				*/
-
-				Log.e("Task", String.valueOf(curTask.option));
-				Log.e("Task", String.valueOf(curTask.option & Task.MULTIPLE));
-
-				if ((curTask.option & Task.STOP_ON_ERROR) != 0 && returnCode < 0)
-					NetworkData.removeTask(curTask);
-				if ((curTask.option & Task.MULTIPLE) == 0 && (curTask.option & Task.RETRY_ON_ERROR) == 0)
-					NetworkData.removeTask(curTask);
-			}
-
-			Log.e("Info", "Done");
-		}
-		catch (Exception ex)
-		{
-			Log.e("run()", ex.toString());
-		}
-
-		NetworkData.nthread = null;
 	}
 }
 
