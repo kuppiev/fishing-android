@@ -15,12 +15,13 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/fishing64"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,6 +31,7 @@
         <activity
             android:name=".ObjectsListActivity"
             android:label="@string/title_activity_objects_list"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -38,6 +40,7 @@
         <activity
             android:name=".ObjectInfoActivity"
             android:label="ObjectInfoActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".ObjectsListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

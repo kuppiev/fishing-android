@@ -4,4 +4,4 @@
         android:drawable="@drawable/ymk_zoom_minus_pressed" />
     <item android:state_enabled="true"
         android:drawable="@drawable/ymk_zoom_minus" />
-</selector><!-- From: file:/home/doomgiver/AndroidStudioProjects/KareliaFishing/yandexmapkitlibrary/src/main/res/drawable/ymk_zoom_minus_drawable.xml -->
+</selector><!-- From: file:/home/doomgiver/Downloads/fishing-android/yandexmapkitlibrary/src/main/res/drawable/ymk_zoom_minus_drawable.xml -->

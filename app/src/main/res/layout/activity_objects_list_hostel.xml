@@ -7,34 +7,34 @@
                 android:id="@+id/relativeLayout"
                 tools:context="org.fruct.kareliafishing.ObjectsListActivity">
 
-
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="false"
         android:id="@+id/linearLayout"
         android:weightSum="1"
         android:showDividers="beginning|middle">
 
         <Spinner
             android:id="@+id/sortingTypeSpinner"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/sortingType" />
+            android:entries="@array/sortingType"
+            android:layout_weight="0"
+            android:layout_marginBottom="10dp" />
 
         <ScrollView
-            android:layout_width="fill_parent"
-            android:layout_height="317dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:id="@+id/listScrollView"
-            android:layout_weight="0.80">
+            android:layout_weight="1">
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/listLayout"
                 android:gravity="fill_vertical">
             </LinearLayout>
@@ -44,11 +44,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/showOnMapButton"
-            android:layout_gravity="center_horizontal|bottom"
             android:onClick="onShowOnMapButtonClick"
-            android:visibility="visible"
-            android:text="0"
-            />
+            android:text="@string/showAllOnMap"
+            android:visibility="visible" />
     </LinearLayout>
 
 </RelativeLayout>

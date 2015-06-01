@@ -6,6 +6,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -38,6 +41,7 @@ import ru.yandex.yandexmapkit.map.*;
 import ru.yandex.yandexmapkit.overlay.Overlay;
 import ru.yandex.yandexmapkit.overlay.OverlayItem;
 import ru.yandex.yandexmapkit.overlay.balloon.BalloonItem;
+import ru.yandex.yandexmapkit.overlay.balloon.OnBalloonListener;
 import ru.yandex.yandexmapkit.utils.GeoPoint;
 
 
@@ -58,6 +62,8 @@ public class MainActivity extends ActionBarActivity
 	private static MapController mMapController;
 	private static OverlayManager mOverlayManager;
 	private static Overlay mOverlay = null;
+	public static LocationManager locationManager;
+	public static boolean providerEnabled = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +81,29 @@ public class MainActivity extends ActionBarActivity
 		mMapController = mMap.getMapController();
 		mMapController.addMapListener(new MapListener());
 		mOverlayManager = mMapController.getOverlayManager();
+
+		if (null == locationManager)
+		{
+
+		}
+
+		double latitude;
+		double longitude;
+
+		if (null == ApplicationData.getSetting("view_latitude") || null == ApplicationData.getSetting("view_longitude"))
+		{
+			latitude = Double.parseDouble(getString(R.string.ptz_latitude));
+			longitude = Double.parseDouble(getString(R.string.ptz_longitude));
+		}
+		else
+		{
+			latitude = Double.parseDouble(ApplicationData.getSetting("view_latitude"));
+			longitude = Double.parseDouble(ApplicationData.getSetting("view_longitude"));
+			if (null != ApplicationData.getSetting("view_zoom"))
+				mMapController.setZoomCurrent(Float.parseFloat(ApplicationData.getSetting("view_zoom")));
+		}
+
+		mMapController.setPositionNoAnimationTo(new GeoPoint(latitude, longitude));
 
 		try
 		{
@@ -132,8 +161,6 @@ public class MainActivity extends ActionBarActivity
 				case 4:
 					mTitle = getString(R.string.type_of_fish);
 					break;
-				default:
-					return;
 			}
 		}
 		catch (Exception ex)
@@ -153,11 +180,11 @@ public class MainActivity extends ActionBarActivity
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		if (!mNavigationDrawerFragment.isDrawerOpen()) {
+		if (mNavigationDrawerFragment.isDrawerOpen()) {
 			// Only show items in the action bar relevant to this screen
 			// if the drawer is not showing. Otherwise, let the drawer
 			// decide what to show in the action bar.
-			//getMenuInflater().inflate(R.menu.main, menu);
+			getMenuInflater().inflate(R.menu.main, menu);
 			restoreActionBar();
 			return true;
 		}
@@ -241,10 +268,6 @@ public class MainActivity extends ActionBarActivity
 				latitude = Double.parseDouble(processingObject.getInfo("latitude"));
 				longitude = Double.parseDouble(processingObject.getInfo("longitude"));
 
-				Log.e("refreshMap()", processingObject.getName());
-				Log.e("latitude", String.valueOf(latitude));
-				Log.e("longitude", String.valueOf(longitude));
-
 				newItem = new OverlayItem(new GeoPoint(latitude, longitude), null);
 
 				if (ObjectData.SHOP == processingObject.getType())
@@ -260,6 +283,21 @@ public class MainActivity extends ActionBarActivity
 
 				mOverlay.addOverlayItem(newItem);
 			}
+			else
+			{
+				latitude = Double.parseDouble(processingObject.getInfo("latitude1"));
+				longitude = Double.parseDouble(processingObject.getInfo("longitude1"));
+
+				newItem = new OverlayItem(new GeoPoint(latitude, longitude), null);
+				newItem.setDrawable(this.getResources().getDrawable(R.drawable.fishing));
+				newItem.setVisible(true);
+
+				newBalloonItem = new BalloonItem(this, new GeoPoint(latitude, longitude));
+				newBalloonItem.setText(processingObject.getName());
+				newItem.setBalloonItem(newBalloonItem);
+
+				mOverlay.addOverlayItem(newItem);
+			}
 		}
 
 		mOverlayManager.addOverlay(mOverlay);
@@ -267,7 +305,6 @@ public class MainActivity extends ActionBarActivity
 
 	public void onClick(View view)
 	{
-		//NetworkData.addTask(new UpdateTask());
 		new Update().execute();
 
 	}
@@ -277,7 +314,39 @@ public class MainActivity extends ActionBarActivity
 		@Override
 		public void onMapActionEvent( MapEvent mapEvent )
 		{
+			//Log.e("mapEvent", String.valueOf(mapEvent.getMsg()));
 
+			if (2 == mapEvent.getMsg())
+			{
+				ApplicationData.addSetting("view_latitude", String.valueOf(mMapController.getMapCenter().getLat()));
+				ApplicationData.addSetting("view_longitude", String.valueOf(mMapController.getMapCenter().getLon()));
+				ApplicationData.addSetting("view_zoom", String.valueOf(mMapController.getZoomCurrent()));
+
+			}
+		}
+	}
+
+	class MyLocationListener implements LocationListener
+	{
+		@Override
+		public void onLocationChanged(Location location) {
+			ApplicationData.addSetting("my_latitude", String.valueOf(location.getLatitude()));
+			ApplicationData.addSetting("my_longitude", String.valueOf(location.getLongitude()));
+		}
+
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+
+		}
+
+		@Override
+		public void onProviderEnabled(String provider) {
+			MainActivity.providerEnabled = true;
+		}
+
+		@Override
+		public void onProviderDisabled(String provider) {
+			MainActivity.providerEnabled = false;
 		}
 	}
 }

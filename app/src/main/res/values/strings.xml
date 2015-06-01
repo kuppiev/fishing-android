@@ -29,6 +29,8 @@
 
     <string name="toListOfLakes">Показать список озёр</string>
     <string name="toListOfFish">Показать список рыб</string>
+    <string name="showAllOnMap">Показать все на карте</string>
+    <string name="showSomeOnMap">Показать %d на карте</string>
 
     <string name="update">Обновление</string>
     <string name="updateSuccess">Обновление базы успешно завершено</string>

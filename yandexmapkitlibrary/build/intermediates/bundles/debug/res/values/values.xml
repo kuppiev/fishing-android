@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/home/doomgiver/AndroidStudioProjects/KareliaFishing/yandexmapkitlibrary/src/main/res/values/ymk_strings.xml -->
+    <!-- From: file:/home/doomgiver/Downloads/fishing-android/yandexmapkitlibrary/src/main/res/values/ymk_strings.xml -->
     <eat-comment/>
     <string name="ymk_findme_not_found">Не удалось определить местоположение</string>
     <string name="ymk_kilometers_short">км</string>

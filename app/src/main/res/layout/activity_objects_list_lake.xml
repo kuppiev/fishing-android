@@ -21,14 +21,16 @@
 
         <Spinner
             android:id="@+id/sortingTypeSpinner"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/sortingType" />
+            android:entries="@array/sortingType"
+            android:layout_marginBottom="10dp" />
 
         <ScrollView
             android:layout_width="fill_parent"
-            android:layout_height="356dp"
-            android:id="@+id/listScrollView">
+            android:layout_height="match_parent"
+            android:id="@+id/listScrollView"
+            android:layout_weight="1">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -41,11 +43,10 @@
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="New Button"
+            android:text="@string/showAllOnMap"
             android:id="@+id/showOnMapButton"
             android:layout_gravity="center_horizontal"
-            android:onClick="onShowOnMapButtonClick"
-            android:visibility="gone"/>
+            android:onClick="onShowOnMapButtonClick" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -201,12 +201,10 @@ class ApplicationData
 
 		try
 		{
-			buffer = new byte[2048];
+			//buffer = new byte[2048];
 			path = activity.getString(R.string.app_settings);
 			oStream = activity.openFileOutput(path, Activity.MODE_PRIVATE);
 			keySet = settings.keySet();
-
-			Log.e("Saving", path);
 
 			value = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 			value += "<settings>\n";
@@ -220,7 +218,6 @@ class ApplicationData
 				value = settings.get(key);
 				buffer = String.format("<%s>%s</%s>\n", key, value, key).getBytes();
 				oStream.write(buffer);
-				Log.e("write", String.format("<%s>%s</%s>\n", key, value, key));
 			}
 
 			value = "</settings>";

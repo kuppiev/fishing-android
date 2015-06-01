@@ -12,4 +12,6 @@
     <string name="hostname">gets.cs.karelia.ru</string>
     <string name="network_settings">netSettings.xml</string>
     <string name="app_settings">appSettings.xml</string>
+    <string name="ptz_latitude">61.789036</string>
+    <string name="ptz_longitude">34.359688</string>
 </resources>

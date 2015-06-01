@@ -5,4 +5,4 @@
     <item android:state_focused="true" android:state_pressed="true" android:color="#FF999999"/>
     <item android:state_focused="false" android:state_pressed="true" android:color="#FF999999"/>
     <item android:color="#FFFFFFFF"/>
-</selector><!-- From: file:/home/doomgiver/AndroidStudioProjects/KareliaFishing/yandexmapkitlibrary/src/main/res/drawable/ymk_balloon_text_color.xml --><!-- From: file:/home/doomgiver/AndroidStudioProjects/KareliaFishing/yandexmapkitlibrary/build/intermediates/bundles/debug/res/drawable/ymk_balloon_text_color.xml -->
+</selector><!-- From: file:/home/doomgiver/Downloads/fishing-android/yandexmapkitlibrary/src/main/res/drawable/ymk_balloon_text_color.xml --><!-- From: file:/home/doomgiver/Downloads/fishing-android/yandexmapkitlibrary/build/intermediates/bundles/debug/res/drawable/ymk_balloon_text_color.xml -->

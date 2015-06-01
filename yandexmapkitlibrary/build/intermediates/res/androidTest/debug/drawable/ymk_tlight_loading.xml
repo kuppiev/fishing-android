@@ -9,4 +9,4 @@
         android:drawable="@drawable/ymk_tlight_no_level_loading_2"
         android:maxLevel="1"
          />
-</level-list><!-- From: file:/home/doomgiver/AndroidStudioProjects/KareliaFishing/yandexmapkitlibrary/src/main/res/drawable/ymk_tlight_loading.xml --><!-- From: file:/home/doomgiver/AndroidStudioProjects/KareliaFishing/yandexmapkitlibrary/build/intermediates/bundles/debug/res/drawable/ymk_tlight_loading.xml -->
+</level-list><!-- From: file:/home/doomgiver/Downloads/fishing-android/yandexmapkitlibrary/src/main/res/drawable/ymk_tlight_loading.xml --><!-- From: file:/home/doomgiver/Downloads/fishing-android/yandexmapkitlibrary/build/intermediates/bundles/debug/res/drawable/ymk_tlight_loading.xml -->

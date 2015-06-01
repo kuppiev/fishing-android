@@ -1,19 +1,19 @@
 package org.fruct.kareliafishing;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 public class ObjectInfoActivity extends ActionBarActivity {
 	private TextView description_txtView = null;
@@ -58,7 +58,8 @@ public class ObjectInfoActivity extends ActionBarActivity {
 
 		description_txtView = (TextView)findViewById(R.id.description_textView);
 		imageView = (ImageView)findViewById(R.id.imageView);
-
+		description_txtView.setGravity(Gravity.LEFT);
+		description_txtView.setTextColor(Color.BLACK);
 		setTitle(getIntent().getStringExtra("title"));
 
 		description_txtView.setText(object.getDescription());
@@ -73,10 +74,10 @@ public class ObjectInfoActivity extends ActionBarActivity {
 				else
 					imageView.setImageDrawable(getResources().getDrawable(img_id));
 
-				imageView.setVisibility(View.INVISIBLE);
+				imageView.setVisibility(View.VISIBLE);
 				break;
 			default:
-				imageView.setVisibility(View.VISIBLE);
+				imageView.setVisibility(View.INVISIBLE);
 				break;
 		}
 	}

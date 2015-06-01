@@ -20,14 +20,6 @@
             android:layout_height="fill_parent"
             android:apiKey="rRuXPj6PvJnZJJLKABuS35UlvH0vxZZvCx~ZH2T19iM7~3Q4L~XBXE4uRrLKs1Ep7IIwUeYRbcG4rVXThCiBojGDufP5X2VPXtr3xOD7Zkk=" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button"
-            android:layout_gravity="right|bottom"
-            android:onClick="onClick"/>
-
     </FrameLayout>
 
     <!-- android:layout_gravity="start" tells DrawerLayout to treat

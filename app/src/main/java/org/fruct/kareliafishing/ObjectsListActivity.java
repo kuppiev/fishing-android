@@ -2,12 +2,12 @@ package org.fruct.kareliafishing;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -110,6 +110,14 @@ public class ObjectsListActivity extends ActionBarActivity {
 		for (i = 0; i < ApplicationData.objectsData().size(); i++)
 		{
 			tmp = new ListElement(this, ApplicationData.objectsData().get(i));
+			if(i % 2==0)
+			{
+				tmp.setBackgroundColor(Color.rgb(213, 213, 213));
+			}
+			else
+			{
+				tmp.setBackgroundColor(Color.rgb(247,247,247));
+			}
 			listElements.add(tmp);
 			listLayout.addView(listElements.get(i));
 		}
@@ -118,16 +126,17 @@ public class ObjectsListActivity extends ActionBarActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_objects_list, menu);
+		//getMenuInflater().inflate(R.menu.menu_objects_list, menu);
 		return true;
 	}
 
+	/*
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
+		//int id = item.getItemId();
 
 		//noinspection SimplifiableIfStatement
 		if (id == R.id.action_settings) {
@@ -136,6 +145,7 @@ public class ObjectsListActivity extends ActionBarActivity {
 
 		return super.onOptionsItemSelected(item);
 	}
+	*/
 
 	class ListElement extends LinearLayout
 	{
@@ -206,18 +216,13 @@ public class ObjectsListActivity extends ActionBarActivity {
 						count++;
 				}
 
-				if (listElements.size() == count) {
-					showOnMapButton.setText("Показать все на карте");
-					showOnMapButton.setVisibility(VISIBLE);
-
+				if (listElements.size() == count || count == 0)
+				{
+					showOnMapButton.setText(getString(R.string.showAllOnMap));
 				}
-				else if (count == 0)
-					showOnMapButton.setVisibility(INVISIBLE);
 				else
 				{
-					showOnMapButton.setText("Показать " + Integer.toString(count) + " на карте");
-					showOnMapButton.setVisibility(VISIBLE);
-
+					showOnMapButton.setText(String.format(getString(R.string.showSomeOnMap), count));
 				}
 			}
 		}
@@ -275,8 +280,17 @@ public class ObjectsListActivity extends ActionBarActivity {
 
 			listLayout.removeAllViews();
 
-			for (i = 0; i < size; i++)
+			for (i = 0; i < size; i++) {
+				if(i % 2==0)
+				{
+					listElements.get(i).setBackgroundColor(Color.rgb(213, 213, 213));
+				}
+				else
+				{
+					listElements.get(i).setBackgroundColor(Color.rgb(247,247,247));
+				}
 				listLayout.addView(listElements.get(i));
+			}
 		}
 
 		@Override
@@ -287,6 +301,7 @@ public class ObjectsListActivity extends ActionBarActivity {
 	{
 		int i;
 		int size = listLayout.getChildCount();
+		boolean condition = false;
 		ListElement tmp;
 
 		if (0 == size)
@@ -300,8 +315,18 @@ public class ObjectsListActivity extends ActionBarActivity {
 
 			if (tmp.isChecked())
 			{
+				condition = true;
+				break;
+			}
+		}
+
+		for (i = 0; i < size; i++)
+		{
+			tmp = (ListElement) listLayout.getChildAt(i);
+
+			if (tmp.isChecked() == condition)
+			{
 				ApplicationData.mapObjects().add(tmp.getAssociatedObject());
-				Log.e("loging", tmp.getAssociatedObject().getName());
 			}
 		}
 

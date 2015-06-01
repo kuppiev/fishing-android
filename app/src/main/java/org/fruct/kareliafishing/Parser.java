@@ -387,6 +387,8 @@ public abstract class Parser
 								break;
 							case "latitude":
 								processingObject.setInfo("latitude" + points_count.toString(), xpp.getText());
+								Log.e("parseLakes()", "latitude" + points_count.toString());
+								Log.e("parseLakes()", xpp.getText());
 								break;
 							case "longitude":
 								processingObject.setInfo("longitude" + points_count.toString(), xpp.getText());
@@ -436,7 +438,6 @@ public abstract class Parser
 		try
 		{
 			retValue = new ArrayList<>();
-			Log.e("parser", source_files[ObjectData.BEHAVIOR_RULE - 1]);
 
 			while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
 				switch (xpp.getEventType()) {
@@ -444,8 +445,6 @@ public abstract class Parser
 						break;
 					case XmlPullParser.START_TAG:
 						processingTag = xpp.getName();
-
-						Log.e("parseBehaviourRules()", processingTag);
 
 						if (processingTag.equals("rule"))
 							processingObject = new ObjectData(ObjectData.BEHAVIOR_RULE);
@@ -513,7 +512,6 @@ public abstract class Parser
 		try
 		{
 			retValue = new ArrayList<>();
-			Log.e("parser", source_files[ObjectData.FISHING_RULE - 1]);
 
 			while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
 				switch (xpp.getEventType()) {
@@ -588,7 +586,6 @@ public abstract class Parser
 		try
 		{
 			retValue = new ArrayList<>();
-			Log.e("parser", source_files[ObjectData.RECIPE - 1]);
 
 			while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
 				switch (xpp.getEventType()) {
