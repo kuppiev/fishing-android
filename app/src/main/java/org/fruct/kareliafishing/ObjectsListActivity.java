@@ -243,6 +243,7 @@ public class ObjectsListActivity extends ActionBarActivity {
 		public void onItemSelected(AdapterView<?> adapterView, View itemView, int itemPosition, long itemId)
 		{
 			int i, j, size, pos;
+			double x1, x2, y1, y2;
 			ListElement max, tmp;
 			Collator collator;
 			Log.e("itemPosition", Integer.toString(itemPosition));
@@ -275,7 +276,36 @@ public class ObjectsListActivity extends ActionBarActivity {
 			// сортировка по удаленности
 			else if (itemPosition == 1)
 			{
+				/*
+				for (i = 0; i < size - 1; i++)
+				{
+					if (null == listElements.get(i).getAssociatedObject().getInfo("latitude"))
+						continue;
 
+					if (null == listElements.get(i).getAssociatedObject().getInfo("longitude"))
+						continue;
+
+					if (null == ApplicationData.getSetting("my_latitude") || null == ApplicationData.getSetting("my_longitude"))
+						continue;
+
+					x1 = Double.parseDouble(ApplicationData.getSetting("my_latitude"));
+					y1 = Double.parseDouble(ApplicationData.getSetting("my_longitude"));
+
+					max = listElements.get(i);
+					pos = i;
+
+					for (j = i + 1; j < size; j++)
+					{
+						if (collator.compare(max.getAssociatedObject().getName(), listElements.get(j).getAssociatedObject().getName()) > 0)
+						{
+							max = listElements.get(j);
+							pos = j;
+						}
+					}
+
+					tmp = listElements.set(i, max);
+					listElements.set(pos, tmp);
+				}*/
 			}
 
 			listLayout.removeAllViews();

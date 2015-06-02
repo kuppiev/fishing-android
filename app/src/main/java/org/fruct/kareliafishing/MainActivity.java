@@ -303,7 +303,7 @@ public class MainActivity extends ActionBarActivity
 		mOverlayManager.addOverlay(mOverlay);
 	}
 
-	public void onClick(View view)
+	public void onClick(MenuItem item)
 	{
 		new Update().execute();
 
