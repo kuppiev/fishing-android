@@ -32,7 +32,8 @@
             android:name=".ObjectsListActivity"
             android:label="@string/title_activity_objects_list"
             android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.fruct.kareliafishing.MainActivity" />
@@ -40,11 +41,7 @@
         <activity
             android:name=".ObjectInfoActivity"
             android:label="ObjectInfoActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".ObjectsListActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.fruct.kareliafishing.ObjectInfoActivity" />
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

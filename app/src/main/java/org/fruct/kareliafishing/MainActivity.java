@@ -58,6 +58,7 @@ public class MainActivity extends ActionBarActivity
 	 */
 	private CharSequence mTitle;
 	private Intent toObjectsList;
+	private Intent toObjectInfoActivity;
 	private static MapView mMap = null;
 	private static MapController mMapController;
 	private static OverlayManager mOverlayManager;
@@ -277,8 +278,9 @@ public class MainActivity extends ActionBarActivity
 
 				newItem.setVisible(true);
 
-				newBalloonItem = new BalloonItem(this, new GeoPoint(latitude, longitude));
+				newBalloonItem = new MyBalloonItem(this, new GeoPoint(latitude, longitude), processingObject);
 				newBalloonItem.setText(processingObject.getName());
+				newBalloonItem.setOnBalloonListener(new BalloonListener());
 				newItem.setBalloonItem(newBalloonItem);
 
 				mOverlay.addOverlayItem(newItem);
@@ -292,8 +294,9 @@ public class MainActivity extends ActionBarActivity
 				newItem.setDrawable(this.getResources().getDrawable(R.drawable.fishing));
 				newItem.setVisible(true);
 
-				newBalloonItem = new BalloonItem(this, new GeoPoint(latitude, longitude));
+				newBalloonItem = new MyBalloonItem(this, new GeoPoint(latitude, longitude), processingObject);
 				newBalloonItem.setText(processingObject.getName());
+				newBalloonItem.setOnBalloonListener(new BalloonListener());
 				newItem.setBalloonItem(newBalloonItem);
 
 				mOverlay.addOverlayItem(newItem);
@@ -301,6 +304,12 @@ public class MainActivity extends ActionBarActivity
 		}
 
 		mOverlayManager.addOverlay(mOverlay);
+	}
+
+	@Override
+	public void onBackPressed()
+	{
+		System.exit(0);
 	}
 
 	public void onClick(MenuItem item)
@@ -314,14 +323,13 @@ public class MainActivity extends ActionBarActivity
 		@Override
 		public void onMapActionEvent( MapEvent mapEvent )
 		{
-			//Log.e("mapEvent", String.valueOf(mapEvent.getMsg()));
+			Log.e("mapEvent", String.valueOf(mapEvent.getMsg()));
 
 			if (2 == mapEvent.getMsg())
 			{
 				ApplicationData.addSetting("view_latitude", String.valueOf(mMapController.getMapCenter().getLat()));
 				ApplicationData.addSetting("view_longitude", String.valueOf(mMapController.getMapCenter().getLon()));
 				ApplicationData.addSetting("view_zoom", String.valueOf(mMapController.getZoomCurrent()));
-
 			}
 		}
 	}
@@ -348,5 +356,52 @@ public class MainActivity extends ActionBarActivity
 		public void onProviderDisabled(String provider) {
 			MainActivity.providerEnabled = false;
 		}
+	}
+
+	class MyBalloonItem extends BalloonItem
+	{
+		private ObjectData object;
+
+		public MyBalloonItem(Context _context, GeoPoint _geoPoint, ObjectData _object)
+		{
+			super(_context, _geoPoint);
+			this.object = _object;
+		}
+
+		public ObjectData getObject()
+		{
+			return object;
+		}
+
+		@Override
+		public int compareTo(Object another) {
+			return 0;
+		}
+	}
+
+	class BalloonListener implements OnBalloonListener
+	{
+		@Override
+		public void onBalloonViewClick(BalloonItem balloonItem, View view)
+		{
+			ApplicationData.setObjectForInfo(((MyBalloonItem) balloonItem).getObject());
+
+			Intent intent = new Intent(MainActivity.this.getApplicationContext(), ObjectInfoActivity.class);
+			intent.putExtra("title", ApplicationData.getObjectForInfo().getName());
+
+			startActivity(intent);
+		}
+
+		@Override
+		public void onBalloonShow(BalloonItem balloonItem) {	}
+
+		@Override
+		public void onBalloonHide(BalloonItem balloonItem) {	}
+
+		@Override
+		public void onBalloonAnimationStart(BalloonItem balloonItem) {	}
+
+		@Override
+		public void onBalloonAnimationEnd(BalloonItem balloonItem) {	}
 	}
 }

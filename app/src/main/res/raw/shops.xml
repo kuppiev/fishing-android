@@ -74,25 +74,11 @@
 		<phone>+7 (8142) 78-17-80</phone>
 	</shop>
 	<shop>
-		<name>Магазин Охотник и Рыболов</name>
-		<latitude>61.787433</latitude>
-		<longitude>34.34832</longitude>
-		<address>185035, Петрозаводск, ул. Анохина, 45</address>
-		<phone>+7 (8142) 78-17-80</phone>
-	</shop>
-	<shop>
 		<name>Рыболов</name>
 		<latitude>61.766073</latitude>
 		<longitude>34.363497</longitude>
 		<address>185026, Петрозаводск, ул. Балтийская, 63</address>
 		<phone>+7 (8142) 53-00-92</phone>
-	</shop>
-	<shop>
-		<name>Магазин Природа</name>
-		<latitude>61.800729</latitude>
-		<longitude>34.34678</longitude>
-		<address>Петрозаводск, ул. Московская, 7</address>
-		<phone>+7 (814) 277-43-69</phone>
 	</shop>
 	<shop>
 		<name>Магазин Природа</name>

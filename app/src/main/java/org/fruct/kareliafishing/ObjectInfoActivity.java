@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -62,7 +63,25 @@ public class ObjectInfoActivity extends ActionBarActivity {
 		description_txtView.setTextColor(Color.BLACK);
 		setTitle(getIntent().getStringExtra("title"));
 
-		description_txtView.setText(object.getDescription());
+		if (ObjectData.SHOP == object.getType() || ObjectData.HOSTEL == object.getType())
+		{
+			if (null != object.getDescription() && !object.getDescription().equals("no discription"))
+				description_txtView.setText(object.getDescription() + "\n");
+			else
+				description_txtView.setText("");
+
+			if (null != object.getInfo("address"))
+				description_txtView.append(Html.fromHtml(String.format("Адрес: %s<br>", object.getInfo("address"))));
+			if (null != object.getInfo("phone"))
+				description_txtView.append(Html.fromHtml(String.format("Тел: %s<br>", object.getInfo("phone"))));
+			if (null != object.getInfo("site"))
+				description_txtView.append(Html.fromHtml(String.format("Сайт: %s<br>", object.getInfo("site"))));
+		}
+		else
+			description_txtView.setText(object.getDescription());
+
+		//description_txtView.setText(Html.fromHtml(object.getDescription()));
+		//description_txtView.setText(Html.fromHtml("<a href=\"www.yandex.ru\">ha-ha</a>"));
 
 		switch (object.getType())
 		{
@@ -80,6 +99,12 @@ public class ObjectInfoActivity extends ActionBarActivity {
 				imageView.setVisibility(View.INVISIBLE);
 				break;
 		}
+	}
+
+	@Override
+	public void onBackPressed()
+	{
+		finish();
 	}
 
 	@Override
@@ -138,10 +163,12 @@ public class ObjectInfoActivity extends ActionBarActivity {
 
 		ApplicationData.objectsData().clear();
 		ApplicationData.show(lakes);
+		ObjectsListActivity.title = getResources().getStringArray(R.array.menu_items)[2];
 
-		Intent intent = new Intent(this, ObjectsListActivity.class);
-		intent.putExtra("title", this.getResources().getStringArray(R.array.menu_items)[2]);
+		Intent intent = new Intent(getApplicationContext(), ObjectsListActivity.class);
 		startActivity(intent);
+
+		//finish();
 	}
 
 	public void onToListOfFishButtonClick(View view)
@@ -172,9 +199,10 @@ public class ObjectInfoActivity extends ActionBarActivity {
 
 		ApplicationData.objectsData().clear();
 		ApplicationData.show(fish);
+		ObjectsListActivity.title = getResources().getStringArray(R.array.menu_items)[3];
 
-		Intent intent = new Intent(this, ObjectsListActivity.class);
-		intent.putExtra("title", this.getResources().getStringArray(R.array.menu_items)[3]);
+		Intent intent = new Intent(getApplicationContext(), ObjectsListActivity.class);
 		startActivity(intent);
+		//finish();
 	}
 }

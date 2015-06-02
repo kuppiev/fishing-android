@@ -31,22 +31,27 @@ public class ObjectsListActivity extends ActionBarActivity {
 	private Spinner sortingTypeSpinner = null;
 	private Button showOnMapButton = null;
 	private Intent toObjectInfo = null;
-	private static String title = null;
+	protected static String title = null;
 	private Activity activity = this;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+	}
 
-		if (ApplicationData.objectsData() == null)
-			return;
-		else if (ApplicationData.objectsData().isEmpty())
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		Log.e("ObjListAct", "onResume()");
+
+		if (null != ObjectsListActivity.title)
+			setTitle(ObjectsListActivity.title);
+
+		if (null == ApplicationData.objectsData() || ApplicationData.objectsData().isEmpty())
 		{
-			if (getIntent().hasExtra("title"))
-			{
-				this.setTitle(getIntent().getExtras().getString("title"));
-				ObjectsListActivity.title = this.getTitle().toString();
-			}
+			if (null != listLayout)
+				listLayout.removeAllViews();
 
 			return;
 		}
@@ -87,32 +92,24 @@ public class ObjectsListActivity extends ActionBarActivity {
 				break;
 		}
 
-		int i;
-		ListElement tmp;
-
 		toObjectInfo = new Intent(this, ObjectInfoActivity.class);
 		listLayout = (LinearLayout)findViewById(R.id.listLayout);
 
-		if (getIntent().hasExtra("title"))
-		{
-			this.setTitle(getIntent().getExtras().getString("title"));
-			ObjectsListActivity.title = this.getTitle().toString();
-		}
-		else
-			this.setTitle(ObjectsListActivity.title);
+		int i;
+		ListElement tmp;
 
 		if (listElements == null)
 			listElements = new ArrayList<>();
 
 		listLayout.removeAllViews();
-
+		listElements.clear();
 
 		for (i = 0; i < ApplicationData.objectsData().size(); i++)
 		{
 			tmp = new ListElement(this, ApplicationData.objectsData().get(i));
 			if(i % 2==0)
 			{
-				tmp.setBackgroundColor(Color.rgb(213, 213, 213));
+				tmp.setBackgroundColor(Color.rgb(223, 223, 223));
 			}
 			else
 			{
@@ -128,6 +125,14 @@ public class ObjectsListActivity extends ActionBarActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		//getMenuInflater().inflate(R.menu.menu_objects_list, menu);
 		return true;
+	}
+
+	@Override
+	public void onBackPressed()
+	{
+		Log.e("onBackPressed", "ha-ha");
+		//finish();
+		startActivity(new Intent(getApplicationContext(), MainActivity.class));
 	}
 
 	/*
@@ -149,7 +154,6 @@ public class ObjectsListActivity extends ActionBarActivity {
 
 	class ListElement extends LinearLayout
 	{
-		private CheckBox chkBox;
 		private TextView txtView;
 		private ObjectData object;					// Existing object to associate with
 
@@ -159,26 +163,11 @@ public class ObjectsListActivity extends ActionBarActivity {
 			setOrientation(HORIZONTAL);
 			object = _obj;
 
-			// Fishes and don't have checkbox
-			switch (object.getType())
-			{
-				case ObjectData.LAKE:
-				case ObjectData.HOSTEL:
-				case ObjectData.SHOP:
-					chkBox = new CheckBox(_context);       // Checkbox for object
-					chkBox.setOnCheckedChangeListener(new CheckedChangeListener());
-					addView(chkBox);                       // Put Checkbox on layer
-					break;
-				default:
-					break;
-			}
-
 			txtView = new TextView(_context);          // Creating TextView for object's name
 			txtView.setTextAppearance(_context, R.style.Base_TextAppearance_AppCompat_Large);
 			txtView.setText(_obj.getName());           // Put object's name to TextView's text
 			//txtView.setOnLongClickListener(new LongClickListener());
 			this.setOnLongClickListener(new LongClickListener(this));
-
 
 			addView(txtView);                          // Put TextView on layer
 		}
@@ -193,7 +182,8 @@ public class ObjectsListActivity extends ActionBarActivity {
 			}
 
 			@Override
-			public boolean onLongClick(View v) {
+			public boolean onLongClick(View v)
+			{
 				Log.e("LongClick", element.getAssociatedObject().getName());
 				toObjectInfo.putExtra("title", getAssociatedObject().getName());
 				ApplicationData.setObjectForInfo(getAssociatedObject());
@@ -202,35 +192,6 @@ public class ObjectsListActivity extends ActionBarActivity {
 			}
 		}
 
-		class CheckedChangeListener implements CompoundButton.OnCheckedChangeListener
-		{
-			@Override
-			public void onCheckedChanged(CompoundButton compoundButton, boolean checked)
-			{
-				int count = 0;
-				Iterator<ListElement> it;
-
-				for (it = listElements.iterator(); it.hasNext();)
-				{
-					if (it.next().isChecked())
-						count++;
-				}
-
-				if (listElements.size() == count || count == 0)
-				{
-					showOnMapButton.setText(getString(R.string.showAllOnMap));
-				}
-				else
-				{
-					showOnMapButton.setText(String.format(getString(R.string.showSomeOnMap), count));
-				}
-			}
-		}
-
-		public boolean isChecked()
-		{
-			return chkBox.isChecked();
-		}
 		public ObjectData getAssociatedObject()
 		{
 			return object;
@@ -243,7 +204,7 @@ public class ObjectsListActivity extends ActionBarActivity {
 		public void onItemSelected(AdapterView<?> adapterView, View itemView, int itemPosition, long itemId)
 		{
 			int i, j, size, pos;
-			double x1, x2, y1, y2;
+			double x1, x2, y1, y2, distance, max_distance;
 			ListElement max, tmp;
 			Collator collator;
 			Log.e("itemPosition", Integer.toString(itemPosition));
@@ -276,7 +237,6 @@ public class ObjectsListActivity extends ActionBarActivity {
 			// сортировка по удаленности
 			else if (itemPosition == 1)
 			{
-				/*
 				for (i = 0; i < size - 1; i++)
 				{
 					if (null == listElements.get(i).getAssociatedObject().getInfo("latitude"))
@@ -292,20 +252,28 @@ public class ObjectsListActivity extends ActionBarActivity {
 					y1 = Double.parseDouble(ApplicationData.getSetting("my_longitude"));
 
 					max = listElements.get(i);
+					max_distance = 0;
 					pos = i;
 
 					for (j = i + 1; j < size; j++)
 					{
-						if (collator.compare(max.getAssociatedObject().getName(), listElements.get(j).getAssociatedObject().getName()) > 0)
+						x2 = Double.parseDouble(listElements.get(i).getAssociatedObject().getInfo("latitude"));
+						y2 = Double.parseDouble(listElements.get(i).getAssociatedObject().getInfo("longitude"));
+
+						distance = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+						Log.e(listElements.get(i).getAssociatedObject().getName(), String.valueOf(distance));
+
+						if (max_distance < distance)
 						{
 							max = listElements.get(j);
+							max_distance = distance;
 							pos = j;
 						}
 					}
 
 					tmp = listElements.set(i, max);
 					listElements.set(pos, tmp);
-				}*/
+				}
 			}
 
 			listLayout.removeAllViews();
@@ -313,7 +281,7 @@ public class ObjectsListActivity extends ActionBarActivity {
 			for (i = 0; i < size; i++) {
 				if(i % 2==0)
 				{
-					listElements.get(i).setBackgroundColor(Color.rgb(213, 213, 213));
+					listElements.get(i).setBackgroundColor(Color.rgb(223, 223, 223));
 				}
 				else
 				{
@@ -331,7 +299,6 @@ public class ObjectsListActivity extends ActionBarActivity {
 	{
 		int i;
 		int size = listLayout.getChildCount();
-		boolean condition = false;
 		ListElement tmp;
 
 		if (0 == size)
@@ -342,24 +309,10 @@ public class ObjectsListActivity extends ActionBarActivity {
 		for (i = 0; i < size; i++)
 		{
 			tmp = (ListElement) listLayout.getChildAt(i);
-
-			if (tmp.isChecked())
-			{
-				condition = true;
-				break;
-			}
+			ApplicationData.mapObjects().add(tmp.getAssociatedObject());
 		}
 
-		for (i = 0; i < size; i++)
-		{
-			tmp = (ListElement) listLayout.getChildAt(i);
-
-			if (tmp.isChecked() == condition)
-			{
-				ApplicationData.mapObjects().add(tmp.getAssociatedObject());
-			}
-		}
-
-		finish();
+		//finish();
+		startActivity(new Intent(getApplicationContext(), MainActivity.class));
 	}
 }

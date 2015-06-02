@@ -209,43 +209,35 @@ public class NavigationDrawerFragment extends Fragment {
 
 		String[] titles = getResources().getStringArray(R.array.menu_items);
 
-		for (int i = 0; i < 7; i++)
-			Log.e("log", titles[i]);
-
 		switch (position)
 		{
 			case 0:
-				toObjectsList.putExtra("title", titles[0]);
 				ApplicationData.showAll(ObjectData.HOSTEL);
 				break;
 			case 1:
-				toObjectsList.putExtra("title", titles[1]);
 				ApplicationData.showAll(ObjectData.SHOP);
 				break;
 			case 2:
-				toObjectsList.putExtra("title", titles[2]);
 				ApplicationData.showAll(ObjectData.LAKE);
 				break;
 			case 3:
-				toObjectsList.putExtra("title", titles[3]);
 				ApplicationData.showAll(ObjectData.FISH);
 				break;
 			case 4:
-				toObjectsList.putExtra("title", titles[4]);
 				ApplicationData.showAll(ObjectData.BEHAVIOR_RULE);
 				break;
 			case 5:
-				toObjectsList.putExtra("title", titles[5]);
 				ApplicationData.showAll(ObjectData.FISHING_RULE);
 				break;
 			case 6:
-				toObjectsList.putExtra("title", titles[6]);
 				ApplicationData.showAll(ObjectData.RECIPE);
 				break;
 			default:
 				switchToActivity = false;
 				break;
 		}
+
+		ObjectsListActivity.title = titles[position];
 
 		if (mDrawerLayout != null) {
 			mDrawerLayout.closeDrawer(mFragmentContainerView);
@@ -257,10 +249,6 @@ public class NavigationDrawerFragment extends Fragment {
 
 		if (switchToActivity)
 			this.getActivity().startActivity(toObjectsList);
-
-		//if (mCallbacks != null) {
-		//	mCallbacks.onNavigationDrawerItemSelected(position);
-		//}
 	}
 
 	@Override

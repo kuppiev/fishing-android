@@ -731,8 +731,8 @@ public abstract class Parser
 								coordinates = xpp.getText();
 								seporator_pos[0] = coordinates.indexOf(",");
 								seporator_pos[1] = coordinates.lastIndexOf(",");
-								latitude = Double.parseDouble(coordinates.substring(0, seporator_pos[0]));
-								longitude = Double.parseDouble(coordinates.substring(seporator_pos[0] + 1, seporator_pos[1]));
+								longitude = Double.parseDouble(coordinates.substring(0, seporator_pos[0]));
+								latitude = Double.parseDouble(coordinates.substring(seporator_pos[0] + 1, seporator_pos[1]));
 
 								coordinates = String.valueOf(latitude).replace(',', '.');
 								writer.println(String.format("<latitude>%s</latitude>", coordinates));
