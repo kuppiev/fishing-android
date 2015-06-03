@@ -3,23 +3,22 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
 import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,13 +36,13 @@ public class ObjectsListActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 	}
 
 	@Override
 	public void onResume()
 	{
 		super.onResume();
-		Log.e("ObjListAct", "onResume()");
 
 		if (null != ObjectsListActivity.title)
 			setTitle(ObjectsListActivity.title);
@@ -109,11 +108,11 @@ public class ObjectsListActivity extends ActionBarActivity {
 			tmp = new ListElement(this, ApplicationData.objectsData().get(i));
 			if(i % 2==0)
 			{
-				tmp.setBackgroundColor(Color.rgb(223, 223, 223));
+				tmp.setBackgroundResource(R.color.color1);
 			}
 			else
 			{
-				tmp.setBackgroundColor(Color.rgb(247,247,247));
+				tmp.setBackgroundColor(getBackgroundColor(listLayout));
 			}
 			listElements.add(tmp);
 			listLayout.addView(listElements.get(i));
@@ -130,8 +129,6 @@ public class ObjectsListActivity extends ActionBarActivity {
 	@Override
 	public void onBackPressed()
 	{
-		Log.e("onBackPressed", "ha-ha");
-		//finish();
 		startActivity(new Intent(getApplicationContext(), MainActivity.class));
 	}
 
@@ -152,9 +149,29 @@ public class ObjectsListActivity extends ActionBarActivity {
 	}
 	*/
 
+	public static int getBackgroundColor(View view)
+	{
+		try
+		{
+			ColorDrawable drawable = (ColorDrawable)view.getBackground();
+			Field field = drawable.getClass().getDeclaredField("mState");
+			field.setAccessible(true);
+			Object object = field.get(drawable);
+			field = object.getClass().getDeclaredField("mUseColor");
+			field.setAccessible(true);
+			return field.getInt(object);
+		}
+		catch (Exception ex)
+		{
+			Log.e("getBackgroundColor()", ex.toString());
+			return 0;
+		}
+	}
+
 	class ListElement extends LinearLayout
 	{
 		private TextView txtView;
+		private Button button;
 		private ObjectData object;					// Existing object to associate with
 
 		public ListElement(Context _context, ObjectData _obj)
@@ -164,38 +181,59 @@ public class ObjectsListActivity extends ActionBarActivity {
 			object = _obj;
 
 			txtView = new TextView(_context);          // Creating TextView for object's name
+			button = new Button(_context);
+			button.setText(_obj.getName());
+
 			txtView.setTextAppearance(_context, R.style.Base_TextAppearance_AppCompat_Large);
 			txtView.setText(_obj.getName());           // Put object's name to TextView's text
-			//txtView.setOnLongClickListener(new LongClickListener());
-			this.setOnLongClickListener(new LongClickListener(this));
+			txtView.setPadding(20, 20, 20, 20);
+			ListElementListener listener = new ListElementListener(this);
+
+			this.setOnClickListener(listener);
+			this.setOnTouchListener(listener);
 
 			addView(txtView);                          // Put TextView on layer
 		}
 
-		class LongClickListener implements OnLongClickListener
+		class ListElementListener implements OnClickListener, OnTouchListener
 		{
 			private ListElement element = null;
+			private int color_int;
 
-			public LongClickListener(ListElement _element)
+			public ListElementListener(ListElement _element)
 			{
 				element = _element;
 			}
 
 			@Override
-			public boolean onLongClick(View v)
+			public void onClick(View v)
 			{
-				Log.e("LongClick", element.getAssociatedObject().getName());
 				toObjectInfo.putExtra("title", getAssociatedObject().getName());
 				ApplicationData.setObjectForInfo(getAssociatedObject());
+				ObjectInfoActivity.intent = new Intent(getApplicationContext(), ObjectsListActivity.class);
 				startActivity(toObjectInfo);
+			}
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event)
+			{
+				switch (event.getAction())
+				{
+					case MotionEvent.ACTION_DOWN:
+						this.color_int = getBackgroundColor(element);
+						element.setBackgroundColor(Color.GRAY);
+						break;
+					case MotionEvent.ACTION_CANCEL:
+					case MotionEvent.ACTION_UP:
+						element.setBackgroundColor(color_int);
+						break;
+				}
+
 				return false;
 			}
 		}
 
-		public ObjectData getAssociatedObject()
-		{
-			return object;
-		}
+		public ObjectData getAssociatedObject() { return object; }
 	}
 
 	class ItemSelectedListener implements AdapterView.OnItemSelectedListener
@@ -207,8 +245,6 @@ public class ObjectsListActivity extends ActionBarActivity {
 			double x1, x2, y1, y2, distance, max_distance;
 			ListElement max, tmp;
 			Collator collator;
-			Log.e("itemPosition", Integer.toString(itemPosition));
-			Log.e("itemId", Long.toString(itemId));
 
 			size = listElements.size();
 			collator = Collator.getInstance(new Locale("ru", "RU"));
@@ -261,7 +297,6 @@ public class ObjectsListActivity extends ActionBarActivity {
 						y2 = Double.parseDouble(listElements.get(i).getAssociatedObject().getInfo("longitude"));
 
 						distance = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-						Log.e(listElements.get(i).getAssociatedObject().getName(), String.valueOf(distance));
 
 						if (max_distance < distance)
 						{
@@ -278,14 +313,15 @@ public class ObjectsListActivity extends ActionBarActivity {
 
 			listLayout.removeAllViews();
 
-			for (i = 0; i < size; i++) {
+			for (i = 0; i < size; i++)
+			{
 				if(i % 2==0)
 				{
-					listElements.get(i).setBackgroundColor(Color.rgb(223, 223, 223));
+					listElements.get(i).setBackgroundResource(R.color.color1);
 				}
 				else
 				{
-					listElements.get(i).setBackgroundColor(Color.rgb(247,247,247));
+					listElements.get(i).setBackgroundColor(getBackgroundColor(listLayout));
 				}
 				listLayout.addView(listElements.get(i));
 			}
@@ -312,7 +348,6 @@ public class ObjectsListActivity extends ActionBarActivity {
 			ApplicationData.mapObjects().add(tmp.getAssociatedObject());
 		}
 
-		//finish();
 		startActivity(new Intent(getApplicationContext(), MainActivity.class));
 	}
 }

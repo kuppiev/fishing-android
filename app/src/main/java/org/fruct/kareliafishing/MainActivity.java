@@ -1,39 +1,23 @@
 package org.fruct.kareliafishing;
 
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.util.Xml;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
-
-import org.xmlpull.v1.XmlPullParser;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.Iterator;
 
 import ru.yandex.yandexmapkit.*;
@@ -309,6 +293,7 @@ public class MainActivity extends ActionBarActivity
 	@Override
 	public void onBackPressed()
 	{
+
 		System.exit(0);
 	}
 
@@ -323,9 +308,7 @@ public class MainActivity extends ActionBarActivity
 		@Override
 		public void onMapActionEvent( MapEvent mapEvent )
 		{
-			Log.e("mapEvent", String.valueOf(mapEvent.getMsg()));
-
-			if (2 == mapEvent.getMsg())
+			if (MapEvent.MSG_SCROLL_END == mapEvent.getMsg())
 			{
 				ApplicationData.addSetting("view_latitude", String.valueOf(mMapController.getMapCenter().getLat()));
 				ApplicationData.addSetting("view_longitude", String.valueOf(mMapController.getMapCenter().getLon()));
@@ -389,6 +372,7 @@ public class MainActivity extends ActionBarActivity
 			Intent intent = new Intent(MainActivity.this.getApplicationContext(), ObjectInfoActivity.class);
 			intent.putExtra("title", ApplicationData.getObjectForInfo().getName());
 
+			ObjectInfoActivity.intent = new Intent(getApplicationContext(), MainActivity.class);
 			startActivity(intent);
 		}
 

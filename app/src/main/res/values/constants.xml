@@ -14,4 +14,6 @@
     <string name="app_settings">appSettings.xml</string>
     <string name="ptz_latitude">61.789036</string>
     <string name="ptz_longitude">34.359688</string>
+    <color name="color1">#dfdfdfdf</color>
+    <color name="color2">#f7f7f7f7</color>
 </resources>

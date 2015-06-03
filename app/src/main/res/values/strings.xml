@@ -11,7 +11,7 @@
     <string name="hostels">Базы отдыха</string>
     <string name="shops">Магазины</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Обновить</string>
     <string-array name="menu_items">
         <item>Базы отдыха</item>
         <item>Магазины</item>

@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,11 +19,14 @@ public class ObjectInfoActivity extends ActionBarActivity {
 	private TextView description_txtView = null;
 	private ImageView imageView = null;
 	private ObjectData object = null;
+	protected static Intent intent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
 		object = ApplicationData.getObjectForInfo();
 
@@ -104,7 +106,10 @@ public class ObjectInfoActivity extends ActionBarActivity {
 	@Override
 	public void onBackPressed()
 	{
-		finish();
+		if (null != intent)
+			startActivity(intent);
+
+		//finish();
 	}
 
 	@Override
@@ -149,8 +154,6 @@ public class ObjectInfoActivity extends ActionBarActivity {
 
 			for (i = 1; i <= fish_count; i++)
 			{
-				Log.e("fish" + i.toString(), processingLake.getInfo("fish" + i.toString()));
-
 				if (processingLake.getInfo("fish" + i.toString()).equals(currentFishId)) {
 					found = true;
 					break;
@@ -167,8 +170,6 @@ public class ObjectInfoActivity extends ActionBarActivity {
 
 		Intent intent = new Intent(getApplicationContext(), ObjectsListActivity.class);
 		startActivity(intent);
-
-		//finish();
 	}
 
 	public void onToListOfFishButtonClick(View view)
@@ -203,6 +204,5 @@ public class ObjectInfoActivity extends ActionBarActivity {
 
 		Intent intent = new Intent(getApplicationContext(), ObjectsListActivity.class);
 		startActivity(intent);
-		//finish();
 	}
 }
